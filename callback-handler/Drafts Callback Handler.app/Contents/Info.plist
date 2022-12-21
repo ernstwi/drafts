@@ -1,0 +1,36 @@
+<!-- https://blakewilliams.me/posts/handling-macos-url-schemes-with-go -->
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+  <dict>
+    <key>CFBundleDevelopmentRegion</key>
+    <string>en</string>
+    <key>CFBundleDisplayName</key>
+    <string>Drafts Callback Handler</string>
+    <key>CFBundleExecutable</key>
+    <string>Drafts Callback Handler</string>
+    <key>CFBundleIdentifier</key>
+    <string>com.ernstwi.drafts-callback-handler</string>
+    <key>CFBundleInfoDictionaryVersion</key>
+    <string>6.0</string>
+    <key>CFBundleName</key>
+    <string>Drafts Callback Handler</string>
+    <key>CFBundlePackageType</key>
+    <string>APPL</string>
+    <key>CFBundleShortVersionString</key>
+    <string>1.0</string>
+    <key>CFBundleVersion</key>
+    <string>1.0</string>
+    <key>CFBundleURLTypes</key>
+    <array>
+      <dict>
+        <key>CFBundleURLName</key>
+        <string>Custom URL</string>
+        <key>CFBundleURLSchemes</key>
+        <array>
+          <string>ernst</string>
+        </array>
+      </dict>
+    </array>
+  </dict>
+</plist>
