@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+ln_safe() {
+    test -e "$2" && echo "ln_safe: $2: File exists"
+    test -e "$2" || ln -s "$1" "$2"
+}
+
+(cd callback-handler && go build -o "Drafts Callback Handler.app/Contents/MacOS/Drafts Callback Handler")
+ln_safe "$PWD/callback-handler/Drafts Callback Handler.app" "/Applications/Drafts Callback Handler.app"
+(cd cli && go build)
+ln_safe "$PWD/cli/cli" "/usr/local/bin/drafts"
