@@ -206,7 +206,11 @@ func server(ch chan string) {
 	}
 	defer l.Close()
 
-	ch <- sockAddr // Signal ready
+	// Send socket address to open(), which sends it to the callback handler via
+	// Drafts. The callback handler then uses the socket address to forward the
+	// reply from Drafts to open(). This also signals to open() that the server
+	// is ready to accept connections.
+	ch <- sockAddr
 
 	c, err := l.Accept()
 	if err != nil {
