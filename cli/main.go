@@ -12,11 +12,11 @@ import (
 )
 
 type NewCmd struct {
-	Message string   `arg:"-m"`
-	Tag     []string `arg:"-t,separate"`
-	Archive bool     `arg:"-a"`
-	Flagged bool     `arg:"-f"`
-	Action  string
+	Message string   `arg:"-m" help:"draft content (omit to use stdin)"`
+	Tag     []string `arg:"-t,separate" help:"tag"`
+	Archive bool     `arg:"-a" help:"create draft in archive"`
+	Flagged bool     `arg:"-f" help:"create flagged draft"`
+	Action  string   `help:"run action on input as draft"`
 	// Omitted: AllowEmpty
 }
 
