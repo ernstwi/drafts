@@ -70,7 +70,7 @@ func new(p *arg.Parser, param *NewCmd) string {
 	// Params -> Options
 	opt := drafts.CreateOptions{
 		Tags:    param.Tag,
-		Flagged: drafts.Bool(param.Flagged),
+		Flagged: param.Flagged,
 		Action:  param.Action,
 	}
 
@@ -90,8 +90,8 @@ func query(p *arg.Parser, param *QueryCmd) []string {
 	opt := drafts.QueryOptions{
 		Tags:             param.Tags,
 		OmitTags:         param.OmitTags,
-		SortDescending:   drafts.Bool(param.SortDescending),
-		SortFlaggedToTop: drafts.Bool(param.SortFlaggedToTop),
+		SortDescending:   param.SortDescending,
+		SortFlaggedToTop: param.SortFlaggedToTop,
 	}
 
 	// TODO: Custom parsing

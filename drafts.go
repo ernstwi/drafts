@@ -41,24 +41,12 @@ func (s Sort) String() string {
 
 // -----------------------------------------------------------------------------
 
-// TODO: Use json.Marshal on regular bool instead
-type Bool bool
-
-func (b Bool) String() string {
-	if b {
-		return "true"
-	}
-	return "false"
-}
-
-// -----------------------------------------------------------------------------
-
 type CreateOptions struct {
 	Tags       []string
 	Folder     Folder
-	Flagged    Bool
+	Flagged    bool
 	Action     string
-	AllowEmpty Bool
+	AllowEmpty bool
 	// Omitted: RetParam
 }
 
@@ -68,8 +56,8 @@ func Create(text string, opt CreateOptions) string {
 	v := url.Values{
 		"text":       []string{text},
 		"folder":     []string{opt.Folder.String()},
-		"flagged":    []string{opt.Flagged.String()},
-		"allowEmpty": []string{opt.AllowEmpty.String()},
+		"flagged":    []string{boolstr(opt.Flagged)},
+		"allowEmpty": []string{boolstr(opt.AllowEmpty)},
 	}
 	if len(opt.Tags) > 0 {
 		v["tag"] = opt.Tags
@@ -98,8 +86,8 @@ type QueryOptions struct {
 	Tags             []string
 	OmitTags         []string
 	Sort             Sort
-	SortDescending   Bool
-	SortFlaggedToTop Bool
+	SortDescending   bool
+	SortFlaggedToTop bool
 }
 
 // Query for drafts, return UUIDs.
@@ -224,4 +212,12 @@ func server(ch chan string) {
 	}
 
 	ch <- string(msg)
+}
+
+func boolstr(b bool) string {
+    js, err := json.Marshal(b)
+    if err != nil {
+        log.Fatal(err)
+    }
+    return string(js)
 }
