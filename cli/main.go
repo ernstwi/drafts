@@ -22,7 +22,7 @@ type NewCmd struct {
 }
 
 type GetCmd struct {
-	UUID string `arg:"positional,required"`
+	UUID string `arg:"positional" help:"UUID (omit to read from stdin)"`
 }
 
 type QueryCmd struct {
@@ -83,6 +83,13 @@ func new(p *arg.Parser, param *NewCmd) string {
 }
 
 func get(p *arg.Parser, uuid string) string {
+	if uuid == "" {
+		stdin, err := io.ReadAll(os.Stdin)
+		if err != nil {
+			log.Fatal(err)
+		}
+		uuid = strings.TrimSpace(string(stdin))
+	}
 	return drafts.Get(uuid)
 }
 
