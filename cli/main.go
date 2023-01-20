@@ -38,9 +38,9 @@ type QueryCmd struct {
 
 func main() {
 	var args struct {
-		New   *NewCmd   `arg:"subcommand:new"`
-		Get   *GetCmd   `arg:"subcommand:get"`
-		Query *QueryCmd `arg:"subcommand:query"`
+		New   *NewCmd   `arg:"subcommand:new" help:"create new draft"`
+		Get   *GetCmd   `arg:"subcommand:get" help:"get content of draft"`
+		Query *QueryCmd `arg:"subcommand:query" help:"search for drafts"`
 	}
 	p := arg.MustParse(&args)
 	if p.Subcommand() == nil {
