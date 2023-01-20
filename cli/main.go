@@ -22,7 +22,7 @@ type NewCmd struct {
 }
 
 type GetCmd struct {
-	UUID string `arg:"positional"`
+	UUID string `arg:"positional,required"`
 }
 
 type QueryCmd struct {
