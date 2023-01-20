@@ -108,7 +108,6 @@ type QueryOptions struct {
 
 // Query for drafts, return UUIDs.
 // https://scripting.getdrafts.com/classes/Draft#query
-// TODO: Make filter an enum
 func Query(queryString string, filter Filter, opt QueryOptions) []string {
 	args := []any{
 		queryString,
