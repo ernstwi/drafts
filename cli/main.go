@@ -75,7 +75,7 @@ func new(p *arg.Parser, param *NewCmd) string {
 	}
 
 	if param.Archive {
-		opt.Folder = drafts.Archive
+		opt.Folder = drafts.FolderArchive
 	}
 
 	uuid := drafts.Create(text, opt)
@@ -96,23 +96,34 @@ func query(p *arg.Parser, param *QueryCmd) []string {
 
 	// TODO: Custom parsing
 	// https://github.com/alexflint/go-arg#custom-parsing
-	if param.Filter != "all" && !contains([]string{"inbox", "flagged", "archive", "trash"}, param.Filter) {
+
+	var filter drafts.Filter
+	switch param.Filter {
+	case "":
+		filter = drafts.FilterAll
+	case "inbox":
+		filter = drafts.FilterInbox
+	case "archive":
+		filter = drafts.FilterArchive
+	case "trash":
+		filter = drafts.FilterTrash
+	default:
 		p.Fail("filter must be inbox, flagged, archive, or trash")
 	}
 
 	switch param.Sort {
 	case "":
 	case "created":
-		opt.Sort = drafts.Created
+		opt.Sort = drafts.SortCreated
 	case "modified":
-		opt.Sort = drafts.Modified
+		opt.Sort = drafts.SortModified
 	case "accessed":
-		opt.Sort = drafts.Accessed
+		opt.Sort = drafts.SortAccessed
 	default:
 		p.Fail("sort must be created, modified, or accessed")
 	}
 
-	uuids := drafts.Query(param.QueryString, param.Filter, opt)
+	uuids := drafts.Query(param.QueryString, filter, opt)
 	return uuids
 }
 

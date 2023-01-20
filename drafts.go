@@ -17,8 +17,8 @@ import (
 type Folder int
 
 const (
-	Inbox Folder = iota
-	Archive
+	FolderInbox Folder = iota
+	FolderArchive
 )
 
 func (f Folder) String() string {
@@ -27,12 +27,28 @@ func (f Folder) String() string {
 
 // -----------------------------------------------------------------------------
 
+type Filter int
+
+const (
+	FilterInbox Filter = iota
+	FilterFlagged
+	FilterArchive
+	FilterTrash
+	FilterAll
+)
+
+func (f Filter) String() string {
+	return [...]string{"inbox", "flagged", "archive", "trash", "all"}[f]
+}
+
+// -----------------------------------------------------------------------------
+
 type Sort int
 
 const (
-	Created Sort = iota
-	Modified
-	Accessed
+	SortCreated Sort = iota
+	SortModified
+	SortAccessed
 )
 
 func (s Sort) String() string {
@@ -93,10 +109,10 @@ type QueryOptions struct {
 // Query for drafts, return UUIDs.
 // https://scripting.getdrafts.com/classes/Draft#query
 // TODO: Make filter an enum
-func Query(queryString, filter string, opt QueryOptions) []string {
+func Query(queryString string, filter Filter, opt QueryOptions) []string {
 	args := []any{
 		queryString,
-		filter,
+		filter.String(),
 		opt.Tags,
 		opt.OmitTags,
 		opt.Sort.String(),
@@ -215,9 +231,9 @@ func server(ch chan string) {
 }
 
 func boolstr(b bool) string {
-    js, err := json.Marshal(b)
-    if err != nil {
-        log.Fatal(err)
-    }
-    return string(js)
+	js, err := json.Marshal(b)
+	if err != nil {
+		log.Fatal(err)
+	}
+	return string(js)
 }

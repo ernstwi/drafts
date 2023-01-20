@@ -30,18 +30,18 @@ func TestCreateTags(t *testing.T) {
 	defer func() {
 		Trash(uuid)
 	}()
-	res := Query("", "inbox", QueryOptions{Tags: []string{tag}})
+	res := Query("", FilterInbox, QueryOptions{Tags: []string{tag}})
 	assert.Equal(t, uuid, res[0])
 }
 
 func TestCreateFolder(t *testing.T) {
 	text := rand()
-	uuid := Create(text, CreateOptions{Folder: Archive})
+	uuid := Create(text, CreateOptions{Folder: FolderArchive})
 	defer func() {
 		Trash(uuid)
 	}()
-	res := Query(text, "archive", QueryOptions{})
-	empty := Query(text, "inbox", QueryOptions{})
+	res := Query(text, FilterArchive, QueryOptions{})
+	empty := Query(text, FilterInbox, QueryOptions{})
 	assert.Equal(t, uuid, res[0])
 	assert.Equal(t, 0, len(empty))
 }
@@ -54,7 +54,7 @@ func TestCreateFlagged(t *testing.T) {
 		Trash(uuid)
 		Trash(uuid_)
 	}()
-	res := Query(text, "flagged", QueryOptions{})
+	res := Query(text, FilterFlagged, QueryOptions{})
 	assert.Equal(t, 1, len(res))
 	assert.Equal(t, uuid, res[0])
 }
@@ -92,13 +92,13 @@ func TestQuery(t *testing.T) {
 		}
 	}()
 
-	res := Query("", "inbox", QueryOptions{Tags: []string{"test"}})
+	res := Query("", FilterInbox, QueryOptions{Tags: []string{"test"}})
 	assert.EqualSlice(t, []string{a, b, c}, res)
 
-	res = Query("", "inbox", QueryOptions{Tags: []string{"test", "a"}})
+	res = Query("", FilterInbox, QueryOptions{Tags: []string{"test", "a"}})
 	assert.EqualSlice(t, []string{a}, res)
 
-	res = Query("", "inbox", QueryOptions{
+	res = Query("", FilterInbox, QueryOptions{
 		Tags:     []string{"test"},
 		OmitTags: []string{"a"},
 	})
@@ -106,13 +106,13 @@ func TestQuery(t *testing.T) {
 
 	// TODO: Testing Sort requires draft modification
 
-	res = Query("", "inbox", QueryOptions{
+	res = Query("", FilterInbox, QueryOptions{
 		Tags:           []string{"test"},
 		SortDescending: true,
 	})
 	assert.EqualSlice(t, []string{c, b, a}, res)
 
-	res = Query("", "inbox", QueryOptions{
+	res = Query("", FilterInbox, QueryOptions{
 		Tags:             []string{"test"},
 		SortFlaggedToTop: true,
 	})
