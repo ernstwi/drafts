@@ -26,14 +26,14 @@ type GetCmd struct {
 }
 
 type QueryCmd struct {
-	QueryString string   `arg:"positional,required" help:"search string"`
-	Filter      string   `arg:"positional" help:"filter: inbox, flagged, archive, or trash" default:"all"`
+	QueryString string   `arg:"positional" help:"search string"`
+	Filter      string   `arg:"-f" help:"filter: inbox, flagged, archive, or trash" default:"all"`
 	Tags        []string `arg:"-t,--tag,separate" help:"filter by tag"`
 	OmitTags    []string `arg:"-T,--omit-tag,separate" help:"filter out by tag"`
 	Sort        string   `arg:"-s" help:"sort method: created, modified, or accessed"`
 	// TODO: Replace with SortAscending? Make descending default.
 	SortDescending   bool `arg:"-d,--descending" help:"sort descending"`
-	SortFlaggedToTop bool `arg:"-f,--flagged-first" help:"sort flagged drafts to top"`
+	SortFlaggedToTop bool `arg:"-F,--flagged-first" help:"sort flagged drafts to top"`
 }
 
 func main() {
@@ -99,7 +99,7 @@ func query(p *arg.Parser, param *QueryCmd) []string {
 
 	var filter drafts.Filter
 	switch param.Filter {
-	case "":
+	case "all":
 		filter = drafts.FilterAll
 	case "inbox":
 		filter = drafts.FilterInbox
