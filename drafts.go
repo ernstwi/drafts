@@ -14,6 +14,17 @@ import (
 
 // -----------------------------------------------------------------------------
 
+type Draft struct {
+	uuid    string
+	content string
+}
+
+func (d *Draft) String() string {
+	return fmt.Sprintf("%s | %10s", d.uuid, d.content)
+}
+
+// -----------------------------------------------------------------------------
+
 type Folder int
 
 const (
@@ -106,9 +117,9 @@ type QueryOptions struct {
 	SortFlaggedToTop bool
 }
 
-// Query for drafts, return UUIDs.
+// Query for drafts.
 // https://scripting.getdrafts.com/classes/Draft#query
-func Query(queryString string, filter Filter, opt QueryOptions) []string {
+func Query(queryString string, filter Filter, opt QueryOptions) []Draft {
 	args := []any{
 		queryString,
 		filter.String(),
@@ -122,7 +133,15 @@ func Query(queryString string, filter Filter, opt QueryOptions) []string {
 	if err != nil {
 		log.Fatal(err)
 	}
-	return queryJS(string(json))
+	uuids := queryJS(string(json))
+	ds := make([]Draft, len(uuids))
+	for i := range uuids {
+		ds[i] = Draft{
+			uuids[i],
+			Get(uuids[i]),
+		}
+	}
+	return ds
 }
 
 // Query for drafts using JS, return UUIDs.

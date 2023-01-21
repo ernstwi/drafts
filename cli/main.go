@@ -52,7 +52,9 @@ func main() {
 	case args.Get != nil:
 		fmt.Println(get(p, args.Get.UUID))
 	case args.Query != nil:
-		fmt.Println(strings.Join(query(p, args.Query), "\n"))
+		for _, d := range query(p, args.Query) {
+			fmt.Println(d.String())
+		}
 	}
 }
 
@@ -93,7 +95,7 @@ func get(p *arg.Parser, uuid string) string {
 	return drafts.Get(uuid)
 }
 
-func query(p *arg.Parser, param *QueryCmd) []string {
+func query(p *arg.Parser, param *QueryCmd) []drafts.Draft {
 	opt := drafts.QueryOptions{
 		Tags:             param.Tags,
 		OmitTags:         param.OmitTags,
