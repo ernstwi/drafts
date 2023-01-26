@@ -20,7 +20,10 @@ type Draft struct {
 }
 
 func (d *Draft) String() string {
-	return fmt.Sprintf("%s | %10s", d.UUID, d.Content)
+	width := 20
+	r := []rune(d.Content)
+	trunc := string(r[:width])
+	return fmt.Sprintf("%s | %10s", d.UUID, trunc)
 }
 
 // -----------------------------------------------------------------------------
