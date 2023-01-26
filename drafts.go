@@ -10,6 +10,8 @@ import (
 	"os"
 	"os/exec"
 	"strings"
+
+	"golang.org/x/term"
 )
 
 // -----------------------------------------------------------------------------
@@ -20,10 +22,19 @@ type Draft struct {
 }
 
 func (d *Draft) String() string {
-	width := 20
+	width, _, err := term.GetSize(0)
+	if err != nil {
+		log.Fatal(err)
+	}
+	if width < 45 {
+		return d.UUID
+	}
 	r := []rune(d.Content)
-	trunc := string(r[:width])
-	return fmt.Sprintf("%s | %10s", d.UUID, trunc)
+	if len(r) > width-39 {
+		r = r[:width-39-3]
+		return fmt.Sprintf("%s | %s...", d.UUID, string(r))
+	}
+	return fmt.Sprintf("%s | %s", d.UUID, string(r))
 }
 
 // -----------------------------------------------------------------------------
