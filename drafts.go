@@ -22,9 +22,10 @@ type Draft struct {
 }
 
 func (d *Draft) String() string {
+	sep := '│'
 	fd := int(os.Stdout.Fd())
 	if !term.IsTerminal(fd) {
-		return fmt.Sprintf("%s | %s", d.UUID, d.Content)
+		return fmt.Sprintf("%s %c %s", d.UUID, sep, d.Content)
 	}
 
 	width, _, err := term.GetSize(fd)
@@ -39,9 +40,9 @@ func (d *Draft) String() string {
 	r := []rune(d.Content)
 	if len(r) > width-39 {
 		r = r[:width-39-3]
-		return fmt.Sprintf("%s | %s...", d.UUID, string(r))
+		return fmt.Sprintf("%s %c %s...", d.UUID, sep, string(r))
 	}
-	return fmt.Sprintf("%s | %s", d.UUID, d.Content)
+	return fmt.Sprintf("%s %c %s", d.UUID, sep, d.Content)
 }
 
 // -----------------------------------------------------------------------------
