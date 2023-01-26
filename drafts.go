@@ -137,7 +137,7 @@ func Query(queryString string, filter Filter, opt QueryOptions) []Draft {
 	return ds
 }
 
-// Query for drafts using JS, return Drafts.
+// Query for drafts using JS string.
 // https://scripting.getdrafts.com/classes/Draft#query
 // NOTE: Minimum required params are `queryString` and `filter`.
 func queryJS(params string) []Draft {
