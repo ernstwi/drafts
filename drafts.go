@@ -22,19 +22,26 @@ type Draft struct {
 }
 
 func (d *Draft) String() string {
-	width, _, err := term.GetSize(0)
+	fd := int(os.Stdout.Fd())
+	if !term.IsTerminal(fd) {
+		return fmt.Sprintf("%s | %s", d.UUID, d.Content)
+	}
+
+	width, _, err := term.GetSize(fd)
 	if err != nil {
 		log.Fatal(err)
 	}
 	if width < 45 {
 		return d.UUID
 	}
+
+	// Best effort hope that len([]rune) covers utf8 better than len(string)
 	r := []rune(d.Content)
 	if len(r) > width-39 {
 		r = r[:width-39-3]
 		return fmt.Sprintf("%s | %s...", d.UUID, string(r))
 	}
-	return fmt.Sprintf("%s | %s", d.UUID, string(r))
+	return fmt.Sprintf("%s | %s", d.UUID, d.Content)
 }
 
 // -----------------------------------------------------------------------------
