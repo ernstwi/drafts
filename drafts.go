@@ -15,12 +15,12 @@ import (
 // -----------------------------------------------------------------------------
 
 type Draft struct {
-	uuid    string
-	content string
+	UUID    string
+	Content string
 }
 
 func (d *Draft) String() string {
-	return fmt.Sprintf("%s | %10s", d.uuid, d.content)
+	return fmt.Sprintf("%s | %10s", d.UUID, d.Content)
 }
 
 // -----------------------------------------------------------------------------
@@ -133,26 +133,20 @@ func Query(queryString string, filter Filter, opt QueryOptions) []Draft {
 	if err != nil {
 		log.Fatal(err)
 	}
-	uuids := queryJS(string(json))
-	ds := make([]Draft, len(uuids))
-	for i := range uuids {
-		ds[i] = Draft{
-			uuids[i],
-			Get(uuids[i]),
-		}
-	}
+	ds := queryJS(string(json))
 	return ds
 }
 
-// Query for drafts using JS, return UUIDs.
+// Query for drafts using JS, return Drafts.
 // https://scripting.getdrafts.com/classes/Draft#query
 // NOTE: Minimum required params are `queryString` and `filter`.
-func queryJS(params string) []string {
+func queryJS(params string) []Draft {
 	v := RunAction(params, "query")
-	if v.Has("uuids") {
-		return strings.Split(v.Get("uuids"), ",")
+	var ds []Draft
+	if v.Has("drafts") {
+		json.Unmarshal([]byte(v.Get("drafts")), &ds)
 	}
-	return []string{}
+	return ds
 }
 
 // -----------------------------------------------------------------------------
