@@ -121,6 +121,26 @@ func Create(text string, opt CreateOptions) string {
 
 // -----------------------------------------------------------------------------
 
+// Prepend to an existing draft.
+// https://docs.getdrafts.com/docs/automation/urlschemes#prepend
+func Prepend(uuid, text string) {
+	open("prepend", url.Values{
+		"text": []string{text},
+	})
+}
+
+// -----------------------------------------------------------------------------
+
+// Append to an existing draft.
+// https://docs.getdrafts.com/docs/automation/urlschemes#prepend
+func Append(uuid, text string) {
+	open("append", url.Values{
+		"text": []string{text},
+	})
+}
+
+// -----------------------------------------------------------------------------
+
 // Get content of draft.
 // https://docs.getdrafts.com/docs/automation/urlschemes#get
 func Get(uuid string) string {
