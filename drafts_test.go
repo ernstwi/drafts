@@ -15,11 +15,11 @@ func rand() string {
 
 // Extract UUIDs from a slice of Drafts
 func uuids(ds []Draft) []string {
-    res := make([]string, len(ds))
-    for i := range ds {
-        res[i] = ds[i].UUID
-    }
-    return res
+	res := make([]string, len(ds))
+	for i := range ds {
+		res[i] = ds[i].UUID
+	}
+	return res
 }
 
 func TestCreateDefault(t *testing.T) {
