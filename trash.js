@@ -1,4 +1,3 @@
-let input = JSON.parse(draft.content);
-let d = Draft.find(input);
+let d = Draft.find(input[0]);
 d.isTrashed = true;
 d.update();

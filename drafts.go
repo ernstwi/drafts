@@ -1,6 +1,7 @@
 package drafts
 
 import (
+	_ "embed"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -173,13 +174,12 @@ func queryJS(params string) []Draft {
 
 // -----------------------------------------------------------------------------
 
+//go:embed trash.js
+var trashjs string
+
 // Trash a draft.
 func Trash(uuid string) {
-	json, err := json.Marshal(uuid)
-	if err != nil {
-		log.Fatal(err)
-	}
-	RunAction("trash", string(json))
+	JS(trashjs, uuid)
 }
 
 // -----------------------------------------------------------------------------
@@ -195,6 +195,26 @@ func RunAction(action, text string) url.Values {
 }
 
 // -----------------------------------------------------------------------------
+
+// Run JavaScript program in Drafts. Params are available as an array `input`.
+// Returns any JSON added as `result` using context.addSuccessParameter.
+func JS(program string, params ...string) string {
+	js, err := json.Marshal(struct {
+		Program string   `json:"program"`
+		Input   []string `json:"input"`
+	}{
+		program,
+		params,
+	})
+	if err != nil {
+		log.Fatal(err)
+	}
+	v := RunAction("Drafts CLI Helper", string(js))
+	if v.Has("result") {
+		return v.Get("result")
+	}
+	return ""
+}
 
 func open(action string, v url.Values) url.Values {
 	ch := make(chan string)
