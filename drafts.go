@@ -132,6 +132,9 @@ func Get(uuid string) string {
 
 // -----------------------------------------------------------------------------
 
+//go:embed query.js
+var queryjs string
+
 type QueryOptions struct {
 	Tags             []string
 	OmitTags         []string
@@ -152,23 +155,9 @@ func Query(queryString string, filter Filter, opt QueryOptions) []Draft {
 		opt.SortDescending,
 		opt.SortFlaggedToTop,
 	}
-	json, err := json.Marshal(args)
-	if err != nil {
-		log.Fatal(err)
-	}
-	ds := queryJS(string(json))
-	return ds
-}
-
-// Query for drafts using JS string.
-// https://scripting.getdrafts.com/classes/Draft#query
-// NOTE: Minimum required params are `queryString` and `filter`.
-func queryJS(params string) []Draft {
-	v := RunAction("query", params)
+	js := JS(queryjs, args...)
 	var ds []Draft
-	if v.Has("drafts") {
-		json.Unmarshal([]byte(v.Get("drafts")), &ds)
-	}
+	json.Unmarshal([]byte(js), &ds)
 	return ds
 }
 
@@ -198,10 +187,10 @@ func RunAction(action, text string) url.Values {
 
 // Run JavaScript program in Drafts. Params are available as an array `input`.
 // Returns any JSON added as `result` using context.addSuccessParameter.
-func JS(program string, params ...string) string {
+func JS(program string, params ...any) string {
 	js, err := json.Marshal(struct {
-		Program string   `json:"program"`
-		Input   []string `json:"input"`
+		Program string `json:"program"`
+		Input   []any  `json:"input"`
 	}{
 		program,
 		params,
