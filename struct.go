@@ -37,6 +37,8 @@ func (d *Draft) String() string {
 	return fmt.Sprintf("%s %c %s", d.UUID, sep, d.Content)
 }
 
+// ---- Enums ------------------------------------------------------------------
+
 type Folder int
 
 const (
@@ -72,4 +74,23 @@ const (
 
 func (s Sort) String() string {
 	return [...]string{"created", "modified", "accessed"}[s]
+}
+
+// ---- Options ----------------------------------------------------------------
+
+type CreateOptions struct {
+	Tags       []string
+	Folder     Folder
+	Flagged    bool
+	Action     string
+	AllowEmpty bool
+	// Omitted: RetParam
+}
+
+type QueryOptions struct {
+	Tags             []string
+	OmitTags         []string
+	Sort             Sort
+	SortDescending   bool
+	SortFlaggedToTop bool
 }

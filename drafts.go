@@ -5,15 +5,6 @@ import (
 	"net/url"
 )
 
-type CreateOptions struct {
-	Tags       []string
-	Folder     Folder
-	Flagged    bool
-	Action     string
-	AllowEmpty bool
-	// Omitted: RetParam
-}
-
 // Create a new draft. Return new draft's UUID.
 // https://docs.getdrafts.com/docs/automation/urlschemes#create
 func Create(text string, opt CreateOptions) string {
@@ -56,14 +47,6 @@ func Get(uuid string) string {
 		"uuid": []string{uuid},
 	})
 	return res.Get("text")
-}
-
-type QueryOptions struct {
-	Tags             []string
-	OmitTags         []string
-	Sort             Sort
-	SortDescending   bool
-	SortFlaggedToTop bool
 }
 
 // Query for drafts.
