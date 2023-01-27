@@ -106,8 +106,8 @@ func Create(text string, opt CreateOptions) string {
 	v := url.Values{
 		"text":       []string{text},
 		"folder":     []string{opt.Folder.String()},
-		"flagged":    []string{boolstr(opt.Flagged)},
-		"allowEmpty": []string{boolstr(opt.AllowEmpty)},
+		"flagged":    []string{mustJSON(opt.Flagged)},
+		"allowEmpty": []string{mustJSON(opt.AllowEmpty)},
 	}
 	if len(opt.Tags) > 0 {
 		v["tag"] = opt.Tags
@@ -176,16 +176,13 @@ func Trash(uuid string) {
 // Run JavaScript program in Drafts. Params are available as an array `input`.
 // Returns any JSON added as `result` using context.addSuccessParameter.
 func JS(program string, params ...any) string {
-	js, err := json.Marshal(struct {
+	js := mustJSON(struct {
 		Program string `json:"program"`
 		Input   []any  `json:"input"`
 	}{
 		program,
 		params,
 	})
-	if err != nil {
-		log.Fatal(err)
-	}
 	v := RunAction("Drafts CLI Helper", string(js))
 	if v.Has("result") {
 		return v.Get("result")
@@ -273,8 +270,8 @@ func server(ch chan string) {
 	ch <- string(msg)
 }
 
-func boolstr(b bool) string {
-	js, err := json.Marshal(b)
+func mustJSON(a any) string {
+	js, err := json.Marshal(a)
 	if err != nil {
 		log.Fatal(err)
 	}
