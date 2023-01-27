@@ -163,7 +163,7 @@ func Query(queryString string, filter Filter, opt QueryOptions) []Draft {
 // https://scripting.getdrafts.com/classes/Draft#query
 // NOTE: Minimum required params are `queryString` and `filter`.
 func queryJS(params string) []Draft {
-	v := RunAction(params, "query")
+	v := RunAction("query", params)
 	var ds []Draft
 	if v.Has("drafts") {
 		json.Unmarshal([]byte(v.Get("drafts")), &ds)
@@ -179,14 +179,14 @@ func Trash(uuid string) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	RunAction(string(json), "trash")
+	RunAction("trash", string(json))
 }
 
 // -----------------------------------------------------------------------------
 
 // Run action with `text` without creating a new draft.
 // https://docs.getdrafts.com/docs/automation/urlschemes#runaction
-func RunAction(text, action string) url.Values {
+func RunAction(action, text string) url.Values {
 	res := open("runAction", url.Values{
 		"text":   []string{text},
 		"action": []string{action},
