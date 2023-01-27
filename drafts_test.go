@@ -8,20 +8,6 @@ import (
 	"github.com/ernstwi/drafts/assert"
 )
 
-// Return a random string.
-func rand() string {
-	return fmt.Sprint(time.Now().UnixNano())
-}
-
-// Extract UUIDs from a slice of Drafts
-func uuids(ds []Draft) []string {
-	res := make([]string, len(ds))
-	for i := range ds {
-		res[i] = ds[i].UUID
-	}
-	return res
-}
-
 func TestCreateDefault(t *testing.T) {
 	text := rand()
 	uuid := Create(text, CreateOptions{})
@@ -126,4 +112,20 @@ func TestQuery(t *testing.T) {
 		SortFlaggedToTop: true,
 	}))
 	assert.EqualSlice(t, []string{b, a, c}, res)
+}
+
+// ---- Helpers ----------------------------------------------------------------
+
+// Return a random string.
+func rand() string {
+	return fmt.Sprint(time.Now().UnixNano())
+}
+
+// Extract UUIDs from a slice of Drafts
+func uuids(ds []Draft) []string {
+	res := make([]string, len(ds))
+	for i := range ds {
+		res[i] = ds[i].UUID
+	}
+	return res
 }
