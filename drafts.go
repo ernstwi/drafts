@@ -132,9 +132,6 @@ func Get(uuid string) string {
 
 // -----------------------------------------------------------------------------
 
-//go:embed query.js
-var queryjs string
-
 type QueryOptions struct {
 	Tags             []string
 	OmitTags         []string
@@ -142,6 +139,9 @@ type QueryOptions struct {
 	SortDescending   bool
 	SortFlaggedToTop bool
 }
+
+//go:embed query.js
+var queryjs string
 
 // Query for drafts.
 // https://scripting.getdrafts.com/classes/Draft#query
@@ -173,18 +173,6 @@ func Trash(uuid string) {
 
 // -----------------------------------------------------------------------------
 
-// Run action with `text` without creating a new draft.
-// https://docs.getdrafts.com/docs/automation/urlschemes#runaction
-func RunAction(action, text string) url.Values {
-	res := open("runAction", url.Values{
-		"text":   []string{text},
-		"action": []string{action},
-	})
-	return res
-}
-
-// -----------------------------------------------------------------------------
-
 // Run JavaScript program in Drafts. Params are available as an array `input`.
 // Returns any JSON added as `result` using context.addSuccessParameter.
 func JS(program string, params ...any) string {
@@ -204,6 +192,18 @@ func JS(program string, params ...any) string {
 	}
 	return ""
 }
+
+// Run action with `text` without creating a new draft.
+// https://docs.getdrafts.com/docs/automation/urlschemes#runaction
+func RunAction(action, text string) url.Values {
+	res := open("runAction", url.Values{
+		"text":   []string{text},
+		"action": []string{action},
+	})
+	return res
+}
+
+// -----------------------------------------------------------------------------
 
 func open(action string, v url.Values) url.Values {
 	ch := make(chan string)
