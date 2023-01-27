@@ -76,6 +76,30 @@ func TestCreateAllowEmpty(t *testing.T) {
 	assert.Equal(t, "", res)
 }
 
+func TestPrepend(t *testing.T) {
+	text := rand()
+	prefix := rand()
+	uuid := Create(text, CreateOptions{})
+	defer func() {
+		Trash(uuid)
+	}()
+	Prepend(uuid, prefix)
+	res := Get(uuid)
+	assert.Equal(t, prefix+"\n"+text, res)
+}
+
+func TestAppend(t *testing.T) {
+	text := rand()
+	suffix := rand()
+	uuid := Create(text, CreateOptions{})
+	defer func() {
+		Trash(uuid)
+	}()
+	Append(uuid, suffix)
+	res := Get(uuid)
+	assert.Equal(t, text+"\n"+suffix, res)
+}
+
 func TestQuery(t *testing.T) {
 	a := Create("A", CreateOptions{Tags: []string{"test", "a"}})
 	b := Create("B", CreateOptions{Tags: []string{"test", "b"}, Flagged: true})
