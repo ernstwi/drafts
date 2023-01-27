@@ -17,7 +17,7 @@ type NewCmd struct {
 	Tag     []string `arg:"-t,separate" help:"tag"`
 	Archive bool     `arg:"-a" help:"create draft in archive"`
 	Flagged bool     `arg:"-f" help:"create flagged draft"`
-	Action  string   `help:"run action on input as draft"`
+	Action  string   `help:"run action on created draft"`
 	// Omitted: AllowEmpty
 }
 
