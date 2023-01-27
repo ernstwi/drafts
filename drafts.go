@@ -72,6 +72,16 @@ func Trash(uuid string) {
 	JS(trashjs, uuid)
 }
 
+// Run action with `text` without creating a new draft.
+// https://docs.getdrafts.com/docs/automation/urlschemes#runaction
+func RunAction(action, text string) url.Values {
+	res := open("runAction", url.Values{
+		"text":   []string{text},
+		"action": []string{action},
+	})
+	return res
+}
+
 // Run JavaScript program in Drafts. Params are available as an array `input`.
 // Returns any JSON added as `result` using context.addSuccessParameter.
 func JS(program string, params ...any) string {
@@ -87,14 +97,4 @@ func JS(program string, params ...any) string {
 		return v.Get("result")
 	}
 	return ""
-}
-
-// Run action with `text` without creating a new draft.
-// https://docs.getdrafts.com/docs/automation/urlschemes#runaction
-func RunAction(action, text string) url.Values {
-	res := open("runAction", url.Values{
-		"text":   []string{text},
-		"action": []string{action},
-	})
-	return res
 }
