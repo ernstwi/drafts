@@ -28,6 +28,7 @@ func Create(text string, opt CreateOptions) string {
 // https://docs.getdrafts.com/docs/automation/urlschemes#prepend
 func Prepend(uuid, text string) {
 	open("prepend", url.Values{
+		"uuid": []string{uuid},
 		"text": []string{text},
 	})
 }
@@ -36,6 +37,7 @@ func Prepend(uuid, text string) {
 // https://docs.getdrafts.com/docs/automation/urlschemes#prepend
 func Append(uuid, text string) {
 	open("append", url.Values{
+		"uuid": []string{uuid},
 		"text": []string{text},
 	})
 }
