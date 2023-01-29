@@ -84,9 +84,7 @@ func Query(queryString string, filter Filter, opt QueryOptions) []Draft {
 
 // Set active draft.
 func Open(uuid string) {
-	open("open", url.Values{
-		"uuid": []string{uuid},
-	})
+    JS(loadjs, uuid)
 }
 
 // Get UUID of active draft.

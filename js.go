@@ -10,3 +10,6 @@ var trashjs string
 
 //go:embed update.js
 var updatejs string
+
+//go:embed load.js
+var loadjs string
