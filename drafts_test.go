@@ -78,6 +78,18 @@ func TestAppend(t *testing.T) {
 	assert.Equal(t, text+"\n"+suffix, res)
 }
 
+func TestUpdate(t *testing.T) {
+	text := rand()
+	replacement := rand()
+	uuid := Create(text, CreateOptions{})
+	defer func() {
+		Trash(uuid)
+	}()
+	Update(uuid, replacement)
+	res := Get(uuid)
+	assert.Equal(t, replacement, res)
+}
+
 func TestQuery(t *testing.T) {
 	a := Create("A", CreateOptions{Tags: []string{"test", "a"}})
 	b := Create("B", CreateOptions{Tags: []string{"test", "b"}, Flagged: true})

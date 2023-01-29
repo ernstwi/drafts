@@ -38,6 +38,12 @@ func Append(uuid, text string) {
 	})
 }
 
+// Update content of an existing draft.
+func Update(uuid, text string) {
+	// replaceRange URL requires a range, so using JS is simpler
+	JS(updatejs, uuid, text)
+}
+
 // Get content of draft.
 // https://docs.getdrafts.com/docs/automation/urlschemes#get
 func Get(uuid string) string {
