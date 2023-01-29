@@ -9,16 +9,12 @@ import (
 // https://docs.getdrafts.com/docs/automation/urlschemes#create
 func Create(text string, opt CreateOptions) string {
 	v := url.Values{
-		"text":       []string{text},
-		"folder":     []string{opt.Folder.String()},
-		"flagged":    []string{mustJSON(opt.Flagged)},
-		"allowEmpty": []string{mustJSON(opt.AllowEmpty)},
+		"text":    []string{text},
+		"folder":  []string{opt.Folder.String()},
+		"flagged": []string{mustJSON(opt.Flagged)},
 	}
 	if len(opt.Tags) > 0 {
 		v["tag"] = opt.Tags
-	}
-	if opt.Action != "" {
-		v.Add("action", opt.Action)
 	}
 	res := open("create", v)
 	return res.Get("uuid")

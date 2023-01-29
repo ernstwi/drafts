@@ -17,8 +17,6 @@ type NewCmd struct {
 	Tag     []string `arg:"-t,separate" help:"tag"`
 	Archive bool     `arg:"-a" help:"create draft in archive"`
 	Flagged bool     `arg:"-f" help:"create flagged draft"`
-	Action  string   `help:"run action on created draft"`
-	// Omitted: AllowEmpty
 }
 
 type GetCmd struct {
@@ -73,7 +71,6 @@ func new(p *arg.Parser, param *NewCmd) string {
 	opt := drafts.CreateOptions{
 		Tags:    param.Tag,
 		Flagged: param.Flagged,
-		Action:  param.Action,
 	}
 
 	if param.Archive {

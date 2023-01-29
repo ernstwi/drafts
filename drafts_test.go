@@ -54,28 +54,6 @@ func TestCreateFlagged(t *testing.T) {
 	assert.Equal(t, uuid, res[0].UUID)
 }
 
-func TestCreateAction(t *testing.T) {
-	text := rand()
-	uuid := Create(text, CreateOptions{Action: "Indent"})
-	defer func() {
-		Trash(uuid)
-	}()
-	res := Get(uuid)
-	assert.Equal(t, "	"+text, res)
-}
-
-// Skipped: Requires interaction in Drafts GUI
-func TestCreateAllowEmpty(t *testing.T) {
-	t.SkipNow()
-	text := ""
-	uuid := Create(text, CreateOptions{Action: "Indent", AllowEmpty: false})
-	defer func() {
-		Trash(uuid)
-	}()
-	res := Get(uuid)
-	assert.Equal(t, "", res)
-}
-
 func TestPrepend(t *testing.T) {
 	text := rand()
 	prefix := rand()
