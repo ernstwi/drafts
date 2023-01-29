@@ -5,6 +5,8 @@ import (
 	"net/url"
 )
 
+// ---- Writing drafts ---------------------------------------------------------
+
 // Create a new draft. Return new draft's UUID.
 // https://docs.getdrafts.com/docs/automation/urlschemes#create
 func Create(text string, opt CreateOptions) string {
@@ -44,6 +46,13 @@ func Update(uuid, text string) {
 	JS(updatejs, uuid, text)
 }
 
+// Trash a draft.
+func Trash(uuid string) {
+	JS(trashjs, uuid)
+}
+
+// ---- Reading drafts ---------------------------------------------------------
+
 // Get content of draft.
 // https://docs.getdrafts.com/docs/automation/urlschemes#get
 func Get(uuid string) string {
@@ -71,10 +80,7 @@ func Query(queryString string, filter Filter, opt QueryOptions) []Draft {
 	return ds
 }
 
-// Trash a draft.
-func Trash(uuid string) {
-	JS(trashjs, uuid)
-}
+// ---- Misc -------------------------------------------------------------------
 
 // Run action with `text` without creating a new draft.
 // TODO: Add option to run on s Draft (using "open" URL)
