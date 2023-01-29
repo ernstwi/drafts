@@ -77,6 +77,7 @@ func Trash(uuid string) {
 }
 
 // Run action with `text` without creating a new draft.
+// TODO: Add option to run on s Draft (using "open" URL)
 // https://docs.getdrafts.com/docs/automation/urlschemes#runaction
 func RunAction(action, text string) url.Values {
 	res := open("runAction", url.Values{
