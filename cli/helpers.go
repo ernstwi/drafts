@@ -21,7 +21,7 @@ func fzfUUID(input string) (string, error) {
 // Run FZF on input, return line.
 func fzf(input string) (string, error) {
 	var result strings.Builder
-	cmd := exec.Command("fzf")
+	cmd := exec.Command("fzf", "--delimiter", "\\|", "--with-nth", "2")
 	cmd.Stdout = &result
 	cmd.Stderr = os.Stderr
 	cmd.Stdin = strings.NewReader(input)
