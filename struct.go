@@ -8,16 +8,17 @@ import (
 	"golang.org/x/term"
 )
 
+const Separator = '|'
+
 type Draft struct {
 	UUID    string
 	Content string
 }
 
 func (d *Draft) String() string {
-	sep := '│'
 	fd := int(os.Stdout.Fd())
 	if !term.IsTerminal(fd) {
-		return fmt.Sprintf("%s %c %s", d.UUID, sep, d.Content)
+		return fmt.Sprintf("%s %c %s", d.UUID, Separator, d.Content)
 	}
 
 	width, _, err := term.GetSize(fd)
@@ -32,9 +33,9 @@ func (d *Draft) String() string {
 	r := []rune(d.Content)
 	if len(r) > width-39 {
 		r = r[:width-39-3]
-		return fmt.Sprintf("%s %c %s...", d.UUID, sep, string(r))
+		return fmt.Sprintf("%s %c %s...", d.UUID, Separator, string(r))
 	}
-	return fmt.Sprintf("%s %c %s", d.UUID, sep, d.Content)
+	return fmt.Sprintf("%s %c %s", d.UUID, Separator, d.Content)
 }
 
 // ---- Enums ------------------------------------------------------------------

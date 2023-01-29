@@ -34,11 +34,14 @@ type QueryCmd struct {
 	SortFlaggedToTop bool `arg:"-F,--flagged-first" help:"sort flagged drafts to top"`
 }
 
+type SelectCmd struct{}
+
 func main() {
 	var args struct {
-		New   *NewCmd   `arg:"subcommand:new" help:"create new draft"`
-		Get   *GetCmd   `arg:"subcommand:get" help:"get content of draft"`
-		Query *QueryCmd `arg:"subcommand:query" help:"search for drafts"`
+		New    *NewCmd    `arg:"subcommand:new" help:"create new draft"`
+		Get    *GetCmd    `arg:"subcommand:get" help:"get content of draft"`
+		Query  *QueryCmd  `arg:"subcommand:query" help:"search for drafts"`
+		Select *SelectCmd `arg:"subcommand:select" help:"select active draft using fzf"`
 	}
 	p := arg.MustParse(&args)
 	if p.Subcommand() == nil {
@@ -53,6 +56,8 @@ func main() {
 		for _, d := range query(p, args.Query) {
 			fmt.Println(d.String())
 		}
+	case args.Select != nil:
+		_select()
 	}
 }
 
@@ -131,4 +136,16 @@ func query(p *arg.Parser, param *QueryCmd) []drafts.Draft {
 
 	return drafts.Query(param.QueryString, filter, opt)
 }
+
+func _select() {
+	ds := drafts.Query("", drafts.FilterInbox, drafts.QueryOptions{})
+	var b strings.Builder
+	for _, d := range ds {
+		fmt.Fprintln(&b, d.String())
+	}
+	uuid, err := fzfUUID(b.String())
+	if err != nil {
+		log.Fatal(err)
+	}
+	drafts.Open(uuid)
 }
