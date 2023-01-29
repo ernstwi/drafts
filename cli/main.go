@@ -132,12 +132,3 @@ func query(p *arg.Parser, param *QueryCmd) []drafts.Draft {
 	uuids := drafts.Query(param.QueryString, filter, opt)
 	return uuids
 }
-
-func contains[T comparable](s []T, x T) bool {
-	for _, y := range s {
-		if y == x {
-			return true
-		}
-	}
-	return false
-}
