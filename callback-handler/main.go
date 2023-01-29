@@ -10,13 +10,22 @@ package main
 import "C"
 
 import (
+	"encoding/json"
+	"fmt"
 	"log"
 	"net"
 	"net/url"
+	"os"
 	"os/exec"
+	"path/filepath"
 )
 
 var urlListener chan string = make(chan string)
+
+//export HandleURL
+func HandleURL(u *C.char) {
+	urlListener <- C.GoString(u)
+}
 
 func main() {
 	go C.RunApp()
@@ -39,13 +48,33 @@ func main() {
 		log.Fatal("write error:", err)
 	}
 
-	err = exec.Command("open", "-a", "iTerm").Run()
+	termApp := "Terminal"
+	{
+		conf := config()
+		if conf.Terminal != "" {
+			termApp = conf.Terminal
+		}
+	}
+
+	err = exec.Command("open", "-a", termApp).Run()
 	if err != nil {
 		log.Fatal(err)
 	}
 }
 
-//export HandleURL
-func HandleURL(u *C.char) {
-	urlListener <- C.GoString(u)
+type Config struct {
+	Terminal string `json:"terminal"`
+}
+
+func config() Config {
+	home, _ := os.UserHomeDir()
+	file, _ := os.Open(filepath.Join(home, ".config", "drafts-cli", "config.json"))
+	defer file.Close()
+	decoder := json.NewDecoder(file)
+	c := Config{}
+	err := decoder.Decode(&c)
+	if err != nil {
+		fmt.Println("error:", err)
+	}
+	return c
 }
