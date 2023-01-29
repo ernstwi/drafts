@@ -129,6 +129,6 @@ func query(p *arg.Parser, param *QueryCmd) []drafts.Draft {
 		p.Fail("sort must be created, modified, or accessed")
 	}
 
-	uuids := drafts.Query(param.QueryString, filter, opt)
-	return uuids
+	return drafts.Query(param.QueryString, filter, opt)
+}
 }
