@@ -51,6 +51,10 @@ func Trash(uuid string) {
 	JS(trashjs, uuid)
 }
 
+// TODO:
+// - Archive
+// - Tag
+
 // ---- Reading drafts ---------------------------------------------------------
 
 // Get content of draft.
