@@ -13,6 +13,7 @@ import (
 	"log"
 	"net"
 	"net/url"
+	"os/exec"
 )
 
 var urlListener chan string = make(chan string)
@@ -36,6 +37,11 @@ func main() {
 	_, err = c.Write([]byte(urlStr))
 	if err != nil {
 		log.Fatal("write error:", err)
+	}
+
+	err = exec.Command("open", "-a", "iTerm").Run()
+	if err != nil {
+		log.Fatal(err)
 	}
 }
 
