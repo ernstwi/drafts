@@ -147,5 +147,5 @@ func _select() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	drafts.Open(uuid)
+	drafts.Load(uuid)
 }

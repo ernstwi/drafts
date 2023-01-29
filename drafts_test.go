@@ -136,7 +136,7 @@ func TestOpen(t *testing.T) {
 		Trash(b)
 	}()
 	b_ := Get(Active())
-	Open(a)
+	Load(a)
 	a_ := Get(Active())
 	assert.Equal(t, "a", a_)
 	assert.Equal(t, "b", b_)
