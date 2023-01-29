@@ -80,6 +80,21 @@ func Query(queryString string, filter Filter, opt QueryOptions) []Draft {
 	return ds
 }
 
+// ---- App state --------------------------------------------------------------
+
+// Set active draft.
+func Open(uuid string) {
+	open("open", url.Values{
+		"uuid": []string{uuid},
+	})
+}
+
+// Get UUID of active draft.
+func Active() string {
+	res := open("getCurrentDraft", url.Values{})
+	return res.Get("uuid")
+}
+
 // ---- Misc -------------------------------------------------------------------
 
 // Run action with `text` without creating a new draft.

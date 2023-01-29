@@ -128,6 +128,20 @@ func TestQuery(t *testing.T) {
 	assert.EqualSlice(t, []string{b, a, c}, res)
 }
 
+func TestOpen(t *testing.T) {
+	a := Create("a", CreateOptions{})
+	b := Create("b", CreateOptions{})
+	defer func() {
+		Trash(a)
+		Trash(b)
+	}()
+	b_ := Get(Active())
+	Open(a)
+	a_ := Get(Active())
+	assert.Equal(t, "a", a_)
+	assert.Equal(t, "b", b_)
+}
+
 // ---- Helpers ----------------------------------------------------------------
 
 // Return a random string.
