@@ -72,7 +72,7 @@ func new(p *arg.Parser, param *NewCmd) string {
 
 func get(p *arg.Parser, uuid string) string {
 	if uuid == "" {
-        return drafts.Get(drafts.Active())
+		return drafts.Get(drafts.Active())
 	}
 	return drafts.Get(uuid)
 }
