@@ -128,7 +128,7 @@ func TestQuery(t *testing.T) {
 	assert.EqualSlice(t, []string{b, a, c}, res)
 }
 
-func TestOpen(t *testing.T) {
+func TestLoad(t *testing.T) {
 	a := Create("a", CreateOptions{})
 	b := Create("b", CreateOptions{})
 	defer func() {
