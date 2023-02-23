@@ -5,9 +5,9 @@ import (
 	"io"
 	"log"
 	"os"
+	"strings"
 
 	arg "github.com/alexflint/go-arg"
-	"github.com/ktr0731/go-fuzzyfinder"
 
 	"github.com/ernstwi/drafts"
 )
@@ -79,16 +79,13 @@ func get(p *arg.Parser, uuid string) string {
 
 func _select() {
 	ds := drafts.Query("", drafts.FilterInbox, drafts.QueryOptions{})
-	idx, _ := fuzzyfinder.Find(
-		ds,
-		func(i int) string {
-			return ds[i].Content
-		},
-		fuzzyfinder.WithPreviewWindow(func(i, w, h int) string {
-			if i == -1 {
-				return ""
-			}
-			return ds[i].Content
-		}))
-	drafts.Load(ds[idx].UUID)
+	var b strings.Builder
+	for _, d := range ds {
+		fmt.Fprintln(&b, d.String())
+	}
+	uuid, err := fzfUUID(b.String())
+	if err != nil {
+		log.Fatal(err)
+	}
+	drafts.Load(uuid)
 }
