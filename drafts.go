@@ -87,7 +87,7 @@ func Query(queryString string, filter Filter, opt QueryOptions) []Draft {
 // ---- App state --------------------------------------------------------------
 
 // Set active draft.
-func Load(uuid string) {
+func Select(uuid string) {
 	JS(loadjs, uuid)
 }
 

@@ -140,7 +140,7 @@ func TestQuery(t *testing.T) {
 	assert.EqualSlice(t, []string{b, a, c}, res)
 }
 
-func TestLoad(t *testing.T) {
+func TestSelect(t *testing.T) {
 	a := Create("a", CreateOptions{})
 	b := Create("b", CreateOptions{})
 	defer func() {
@@ -148,7 +148,7 @@ func TestLoad(t *testing.T) {
 		Trash(b)
 	}()
 	b_ := Get(Active())
-	Load(a)
+	Select(a)
 	a_ := Get(Active())
 	assert.Equal(t, "a", a_)
 	assert.Equal(t, "b", b_)
