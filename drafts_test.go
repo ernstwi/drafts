@@ -90,6 +90,18 @@ func TestUpdate(t *testing.T) {
 	assert.Equal(t, replacement, res)
 }
 
+// TODO: This test is a little flaky, should really be used with an empty inbox
+// and trash.
+func TestTrash(t *testing.T) {
+	text := rand()
+	uuid := Create(text, CreateOptions{})
+	Trash(uuid)
+	inbox := Query(text, FilterInbox, QueryOptions{})
+	trash := Query(text, FilterTrash, QueryOptions{})
+	assert.Equal(t, 0, len(inbox))
+	assert.Equal(t, 1, len(trash))
+}
+
 func TestQuery(t *testing.T) {
 	a := Create("A", CreateOptions{Tags: []string{"test", "a"}})
 	b := Create("B", CreateOptions{Tags: []string{"test", "b"}, Flagged: true})
