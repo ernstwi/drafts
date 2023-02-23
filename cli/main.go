@@ -25,6 +25,8 @@ type GetCmd struct {
 
 type SelectCmd struct{}
 
+const linebreak = " ~ "
+
 func main() {
 	var args struct {
 		New    *NewCmd    `arg:"subcommand:new" help:"create new draft"`
@@ -81,7 +83,7 @@ func _select() {
 	ds := drafts.Query("", drafts.FilterInbox, drafts.QueryOptions{})
 	var b strings.Builder
 	for _, d := range ds {
-		fmt.Fprintln(&b, d.String())
+		fmt.Fprintf(&b, "%s %c %s\n", d.UUID, drafts.Separator, strings.Replace(d.Content, "\n", linebreak, -1))
 	}
 	uuid, err := fzfUUID(b.String())
 	if err != nil {
