@@ -18,6 +18,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"strings"
 )
 
 var urlListener chan string = make(chan string)
@@ -30,6 +31,11 @@ func HandleURL(u *C.char) {
 func main() {
 	go C.RunApp()
 	urlStr := <-urlListener
+
+	// Drafts does not properly escape ";" and "+"
+	// https://en.wikipedia.org/wiki/URL_encoding#Percent-encoding_reserved_characters
+	urlStr = strings.ReplaceAll(urlStr, ";", "%3B")
+	urlStr = strings.ReplaceAll(urlStr, "+", "%2B")
 
 	url, err := url.Parse(urlStr)
 	if err != nil {

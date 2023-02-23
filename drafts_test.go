@@ -142,6 +142,18 @@ func TestLoad(t *testing.T) {
 	assert.Equal(t, "b", b_)
 }
 
+func TestGetSpecialChars(t *testing.T) {
+	chars := []string{"␣", "!", "\"", "#", "$", "%", "&", "'", "(", ")", "*", "+", ",", "/", ":", ";", "=", "?", "@", "[", "]"}
+	for _, c := range chars {
+		uuid := Create(c, CreateOptions{})
+		defer func() {
+			Trash(uuid)
+		}()
+		content := Get(uuid)
+		assert.Equal(t, c, content)
+	}
+}
+
 // ---- Helpers ----------------------------------------------------------------
 
 // Return a random string.
