@@ -155,6 +155,7 @@ func TestSelect(t *testing.T) {
 }
 
 func TestGetSpecialChars(t *testing.T) {
+	// https://en.wikipedia.org/wiki/URL_encoding#Percent-encoding_reserved_characters
 	chars := []string{"␣", "!", "\"", "#", "$", "%", "&", "'", "(", ")", "*", "+", ",", "/", ":", ";", "=", "?", "@", "[", "]"}
 	for _, c := range chars {
 		uuid := Create(c, CreateOptions{})
