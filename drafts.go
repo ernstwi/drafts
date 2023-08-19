@@ -97,7 +97,7 @@ func Active() string {
 	return res.Get("uuid")
 }
 
-// ---- Misc -------------------------------------------------------------------
+// ---- Helpers ----------------------------------------------------------------
 
 // Run action with `text` without creating a new draft.
 // TODO: Add option to run on s Draft (using "open" URL)
