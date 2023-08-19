@@ -28,7 +28,7 @@
         <string>Custom URL</string>
         <key>CFBundleURLSchemes</key>
         <array>
-          <string>ernst</string>
+          <string>drafts-callback-handler</string>
         </array>
       </dict>
     </array>

@@ -16,7 +16,7 @@ func open(action string, v url.Values) url.Values {
 	ch := make(chan string)
 	go server(ch)
 	sockAddr := <-ch // Wait for ready signal
-	v.Add("x-success", "ernst://"+sockAddr)
+	v.Add("x-success", "drafts-callback-handler://"+sockAddr)
 	err := exec.Command("open", "-g", draftsURL(action, v)).Run()
 	if err != nil {
 		log.Fatal(err)
