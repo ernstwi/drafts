@@ -3,8 +3,11 @@ package drafts
 const Separator = '|'
 
 type Draft struct {
-	UUID    string
-	Content string
+	UUID       string
+	Content    string
+	IsFlagged  bool
+	IsArchived bool
+	IsTrashed  bool
 }
 
 // ---- Enums ------------------------------------------------------------------

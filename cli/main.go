@@ -74,9 +74,9 @@ func new(p *arg.Parser, param *NewCmd) string {
 
 func get(p *arg.Parser, uuid string) string {
 	if uuid == "" {
-		return drafts.Get(drafts.Active())
+		return drafts.Get(drafts.Active()).Content
 	}
-	return drafts.Get(uuid)
+	return drafts.Get(uuid).Content
 }
 
 func _select() {

@@ -14,8 +14,46 @@ func TestCreateDefault(t *testing.T) {
 	defer func() {
 		Trash(uuid)
 	}()
-	res := Get(uuid)
-	assert.Equal(t, text, res)
+	draft := Get(uuid)
+	assert.DeepEqual(t, Draft{
+		UUID:       uuid,
+		Content:    text,
+		IsFlagged:  false,
+		IsArchived: false,
+		IsTrashed:  false,
+	}, draft)
+}
+
+func TestCreateFlagged(t *testing.T) {
+	text := rand()
+	uuid := Create(text, CreateOptions{Flagged: true})
+	defer func() {
+		Trash(uuid)
+	}()
+	draft := Get(uuid)
+	assert.DeepEqual(t, Draft{
+		UUID:       uuid,
+		Content:    text,
+		IsFlagged:  true,
+		IsArchived: false,
+		IsTrashed:  false,
+	}, draft)
+}
+
+func TestCreateArchived(t *testing.T) {
+	text := rand()
+	uuid := Create(text, CreateOptions{Folder: FolderArchive})
+	defer func() {
+		Trash(uuid)
+	}()
+	draft := Get(uuid)
+	assert.DeepEqual(t, Draft{
+		UUID:       uuid,
+		Content:    text,
+		IsFlagged:  false,
+		IsArchived: true,
+		IsTrashed:  false,
+	}, draft)
 }
 
 func TestCreateTags(t *testing.T) {
@@ -25,33 +63,8 @@ func TestCreateTags(t *testing.T) {
 	defer func() {
 		Trash(uuid)
 	}()
-	res := Query("", FilterInbox, QueryOptions{Tags: []string{tag}})
-	assert.Equal(t, uuid, res[0].UUID)
-}
-
-func TestCreateFolder(t *testing.T) {
-	text := rand()
-	uuid := Create(text, CreateOptions{Folder: FolderArchive})
-	defer func() {
-		Trash(uuid)
-	}()
-	res := Query(text, FilterArchive, QueryOptions{})
-	empty := Query(text, FilterInbox, QueryOptions{})
-	assert.Equal(t, uuid, res[0].UUID)
-	assert.Equal(t, 0, len(empty))
-}
-
-func TestCreateFlagged(t *testing.T) {
-	text := rand()
-	uuid := Create(text, CreateOptions{Flagged: true})
-	uuid_ := Create(text, CreateOptions{})
-	defer func() {
-		Trash(uuid)
-		Trash(uuid_)
-	}()
-	res := Query(text, FilterFlagged, QueryOptions{})
-	assert.Equal(t, 1, len(res))
-	assert.Equal(t, uuid, res[0].UUID)
+	drafts := Query("", FilterInbox, QueryOptions{Tags: []string{tag}})
+	assert.Equal(t, uuid, drafts[0].UUID)
 }
 
 func TestPrepend(t *testing.T) {
@@ -62,8 +75,8 @@ func TestPrepend(t *testing.T) {
 		Trash(uuid)
 	}()
 	Prepend(uuid, prefix)
-	res := Get(uuid)
-	assert.Equal(t, prefix+"\n"+text, res)
+	content := Get(uuid).Content
+	assert.Equal(t, prefix+"\n"+text, content)
 }
 
 func TestAppend(t *testing.T) {
@@ -72,10 +85,11 @@ func TestAppend(t *testing.T) {
 	uuid := Create(text, CreateOptions{})
 	defer func() {
 		Trash(uuid)
+
 	}()
 	Append(uuid, suffix)
-	res := Get(uuid)
-	assert.Equal(t, text+"\n"+suffix, res)
+	content := Get(uuid).Content
+	assert.Equal(t, text+"\n"+suffix, content)
 }
 
 func TestReplace(t *testing.T) {
@@ -86,20 +100,22 @@ func TestReplace(t *testing.T) {
 		Trash(uuid)
 	}()
 	Replace(uuid, replacement)
-	res := Get(uuid)
-	assert.Equal(t, replacement, res)
+	content := Get(uuid).Content
+	assert.Equal(t, replacement, content)
 }
 
-// TODO: This test is a little flaky, should really be used with an empty inbox
-// and trash.
 func TestTrash(t *testing.T) {
 	text := rand()
 	uuid := Create(text, CreateOptions{})
 	Trash(uuid)
-	inbox := Query(text, FilterInbox, QueryOptions{})
-	trash := Query(text, FilterTrash, QueryOptions{})
-	assert.Equal(t, 0, len(inbox))
-	assert.Equal(t, 1, len(trash))
+	draft := Get(uuid)
+	assert.DeepEqual(t, Draft{
+		UUID:       uuid,
+		Content:    text,
+		IsFlagged:  false,
+		IsArchived: false,
+		IsTrashed:  true,
+	}, draft)
 }
 
 func TestQuery(t *testing.T) {
@@ -113,31 +129,31 @@ func TestQuery(t *testing.T) {
 		}
 	}()
 
-	res := uuids(Query("", FilterInbox, QueryOptions{Tags: []string{"test"}}))
-	assert.EqualSlice(t, []string{a, b, c}, res)
+	uuids := getUUIDs(Query("", FilterInbox, QueryOptions{Tags: []string{"test"}}))
+	assert.EqualSlice(t, []string{a, b, c}, uuids)
 
-	res = uuids(Query("", FilterInbox, QueryOptions{Tags: []string{"test", "a"}}))
-	assert.EqualSlice(t, []string{a}, res)
+	uuids = getUUIDs(Query("", FilterInbox, QueryOptions{Tags: []string{"test", "a"}}))
+	assert.EqualSlice(t, []string{a}, uuids)
 
-	res = uuids(Query("", FilterInbox, QueryOptions{
+	uuids = getUUIDs(Query("", FilterInbox, QueryOptions{
 		Tags:     []string{"test"},
 		OmitTags: []string{"a"},
 	}))
-	assert.EqualSlice(t, []string{b, c}, res)
+	assert.EqualSlice(t, []string{b, c}, uuids)
 
 	// TODO: Testing Sort requires draft modification
 
-	res = uuids(Query("", FilterInbox, QueryOptions{
+	uuids = getUUIDs(Query("", FilterInbox, QueryOptions{
 		Tags:           []string{"test"},
 		SortDescending: true,
 	}))
-	assert.EqualSlice(t, []string{c, b, a}, res)
+	assert.EqualSlice(t, []string{c, b, a}, uuids)
 
-	res = uuids(Query("", FilterInbox, QueryOptions{
+	uuids = getUUIDs(Query("", FilterInbox, QueryOptions{
 		Tags:             []string{"test"},
 		SortFlaggedToTop: true,
 	}))
-	assert.EqualSlice(t, []string{b, a, c}, res)
+	assert.EqualSlice(t, []string{b, a, c}, uuids)
 }
 
 func TestSelect(t *testing.T) {
@@ -147,9 +163,9 @@ func TestSelect(t *testing.T) {
 		Trash(a)
 		Trash(b)
 	}()
-	b_ := Get(Active())
+	b_ := Get(Active()).Content
 	Select(a)
-	a_ := Get(Active())
+	a_ := Get(Active()).Content
 	assert.Equal(t, "a", a_)
 	assert.Equal(t, "b", b_)
 }
@@ -162,7 +178,7 @@ func TestGetSpecialChars(t *testing.T) {
 		defer func() {
 			Trash(uuid)
 		}()
-		content := Get(uuid)
+		content := Get(uuid).Content
 		assert.Equal(t, c, content)
 	}
 }
@@ -175,10 +191,10 @@ func rand() string {
 }
 
 // Extract UUIDs from a slice of Drafts
-func uuids(ds []Draft) []string {
-	res := make([]string, len(ds))
+func getUUIDs(ds []Draft) []string {
+	uuids := make([]string, len(ds))
 	for i := range ds {
-		res[i] = ds[i].UUID
+		uuids[i] = ds[i].UUID
 	}
-	return res
+	return uuids
 }

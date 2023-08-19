@@ -2,7 +2,10 @@
 
 package assert
 
-import "testing"
+import (
+	"reflect"
+	"testing"
+)
 
 func Equal[T comparable](t *testing.T, expected, actual T) {
 	t.Helper()
@@ -23,5 +26,13 @@ func EqualSlice[T comparable](t *testing.T, expected, actual []T) {
 		if expected[i] != actual[i] {
 			t.Errorf("want: %v; got: %v", expected, actual)
 		}
+	}
+}
+
+func DeepEqual[T comparable](t *testing.T, expected, actual T) {
+	t.Helper()
+
+	if !reflect.DeepEqual(expected, actual) {
+		t.Errorf("want: %v; got: %v", expected, actual)
 	}
 }

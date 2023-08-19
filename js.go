@@ -13,3 +13,9 @@ var replacejs string
 
 //go:embed js/load.js
 var loadjs string
+
+//go:embed js/archive.js
+var archivejs string
+
+//go:embed js/get.js
+var getjs string

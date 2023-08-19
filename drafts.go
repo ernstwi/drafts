@@ -58,12 +58,13 @@ func Trash(uuid string) {
 // ---- Reading drafts ---------------------------------------------------------
 
 // Get content of draft.
+// TODO: Is URL scheme /get more efficient? If so, create a separate function GetContent.
 // https://docs.getdrafts.com/docs/automation/urlschemes#get
-func Get(uuid string) string {
-	res := open("get", url.Values{
-		"uuid": []string{uuid},
-	})
-	return res.Get("text")
+func Get(uuid string) Draft {
+	js := JS(getjs, uuid)
+	var d Draft
+	json.Unmarshal([]byte(js), &d)
+	return d
 }
 
 // Query for drafts.
