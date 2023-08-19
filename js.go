@@ -2,14 +2,14 @@ package drafts
 
 import _ "embed"
 
-//go:embed query.js
+//go:embed js/query.js
 var queryjs string
 
-//go:embed trash.js
+//go:embed js/trash.js
 var trashjs string
 
-//go:embed replace.js
+//go:embed js/replace.js
 var replacejs string
 
-//go:embed load.js
+//go:embed js/load.js
 var loadjs string
