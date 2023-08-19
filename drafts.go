@@ -51,8 +51,12 @@ func Trash(uuid string) {
 	JS(trashjs, uuid)
 }
 
+// Archive a draft.
+func Archive(uuid string) {
+	JS(archivejs, uuid)
+}
+
 // TODO:
-// - Archive
 // - Tag
 
 // ---- Reading drafts ---------------------------------------------------------

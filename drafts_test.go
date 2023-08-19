@@ -118,6 +118,20 @@ func TestTrash(t *testing.T) {
 	}, draft)
 }
 
+func TestArchive(t *testing.T) {
+	text := rand()
+	uuid := Create(text, CreateOptions{})
+	Archive(uuid)
+	draft := Get(uuid)
+	assert.DeepEqual(t, Draft{
+		UUID:       uuid,
+		Content:    text,
+		IsFlagged:  false,
+		IsArchived: true,
+		IsTrashed:  false,
+	}, draft)
+}
+
 func TestQuery(t *testing.T) {
 	a := Create("A", CreateOptions{Tags: []string{"test", "a"}})
 	b := Create("B", CreateOptions{Tags: []string{"test", "b"}, Flagged: true})
