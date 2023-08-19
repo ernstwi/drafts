@@ -78,14 +78,14 @@ func TestAppend(t *testing.T) {
 	assert.Equal(t, text+"\n"+suffix, res)
 }
 
-func TestUpdate(t *testing.T) {
+func TestReplace(t *testing.T) {
 	text := rand()
 	replacement := rand()
 	uuid := Create(text, CreateOptions{})
 	defer func() {
 		Trash(uuid)
 	}()
-	Update(uuid, replacement)
+	Replace(uuid, replacement)
 	res := Get(uuid)
 	assert.Equal(t, replacement, res)
 }

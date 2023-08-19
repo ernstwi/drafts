@@ -40,10 +40,10 @@ func Append(uuid, text string) {
 	})
 }
 
-// Update content of an existing draft.
-func Update(uuid, text string) {
+// Replace content of an existing draft.
+func Replace(uuid, text string) {
 	// replaceRange URL requires a range, so using JS is simpler
-	JS(updatejs, uuid, text)
+	JS(replacejs, uuid, text)
 }
 
 // Trash a draft.
