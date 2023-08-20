@@ -19,3 +19,6 @@ var archivejs string
 
 //go:embed js/get.js
 var getjs string
+
+//go:embed js/tag.js
+var tagjs string

@@ -8,6 +8,7 @@ type Draft struct {
 	IsFlagged  bool
 	IsArchived bool
 	IsTrashed  bool
+	Tags       []string
 }
 
 // ---- Enums ------------------------------------------------------------------

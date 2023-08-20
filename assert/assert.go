@@ -29,7 +29,7 @@ func EqualSlice[T comparable](t *testing.T, expected, actual []T) {
 	}
 }
 
-func DeepEqual[T comparable](t *testing.T, expected, actual T) {
+func DeepEqual[T any](t *testing.T, expected, actual T) {
 	t.Helper()
 
 	if !reflect.DeepEqual(expected, actual) {

@@ -3,6 +3,7 @@ if (d) {
   let res = {
     uuid: d.uuid,
     content: d.content,
+    tags: d.tags,
     isFlagged: d.isFlagged,
     isArchived: d.isArchived,
     isTrashed: d.isTrashed,

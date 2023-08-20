@@ -56,8 +56,11 @@ func Archive(uuid string) {
 	JS(archivejs, uuid)
 }
 
-// TODO:
-// - Tag
+func Tag(uuid string, tags ...string) {
+	if len(tags) > 0 {
+		JS(tagjs, uuid, tags)
+	}
+}
 
 // ---- Reading drafts ---------------------------------------------------------
 
