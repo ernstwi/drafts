@@ -53,19 +53,19 @@ func main() {
 	}
 	switch {
 	case args.New != nil:
-		fmt.Println(new(p, args.New))
+		fmt.Println(new(args.New))
 	case args.Prepend != nil:
-		fmt.Println(prepend(p, args.Prepend))
+		fmt.Println(prepend(args.Prepend))
 	case args.Append != nil:
-		fmt.Println(append(p, args.Append))
+		fmt.Println(append(args.Append))
 	case args.Get != nil:
-		fmt.Println(get(p, args.Get))
+		fmt.Println(get(args.Get))
 	case args.Select != nil:
 		_select()
 	}
 }
 
-func new(p *arg.Parser, param *NewCmd) string {
+func new(param *NewCmd) string {
 	// Input
 	text := orStdin(param.Message)
 
@@ -83,21 +83,21 @@ func new(p *arg.Parser, param *NewCmd) string {
 	return uuid
 }
 
-func prepend(p *arg.Parser, param *PrependCmd) string {
+func prepend(param *PrependCmd) string {
 	text := orStdin(param.Message)
 	uuid := orActive(param.UUID)
 	drafts.Prepend(uuid, text)
 	return drafts.Get(uuid).Content
 }
 
-func append(p *arg.Parser, param *AppendCmd) string {
+func append(param *AppendCmd) string {
 	text := orStdin(param.Message)
 	uuid := orActive(param.UUID)
 	drafts.Append(uuid, text)
 	return drafts.Get(uuid).Content
 }
 
-func get(p *arg.Parser, param *GetCmd) string {
+func get(param *GetCmd) string {
 	uuid := orActive(param.UUID)
 	return drafts.Get(uuid).Content
 }
