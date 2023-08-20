@@ -12,6 +12,10 @@ import (
 	"github.com/ernstwi/drafts"
 )
 
+const linebreak = " ~ "
+
+// ---- Commands ---------------------------------------------------------------
+
 type NewCmd struct {
 	Message string   `arg:"positional" help:"draft content (omit to use stdin)"`
 	Tag     []string `arg:"-t,separate" help:"tag"`
@@ -19,9 +23,34 @@ type NewCmd struct {
 	Flagged bool     `arg:"-f" help:"create flagged draft"`
 }
 
+func new(param *NewCmd) string {
+	// Input
+	text := orStdin(param.Message)
+
+	// Params -> Options
+	opt := drafts.CreateOptions{
+		Tags:    param.Tag,
+		Flagged: param.Flagged,
+	}
+
+	if param.Archive {
+		opt.Folder = drafts.FolderArchive
+	}
+
+	uuid := drafts.Create(text, opt)
+	return uuid
+}
+
 type PrependCmd struct {
 	Message string `arg:"positional" help:"text to prepend (omit to use stdin)"`
 	UUID    string `arg:"-u" help:"UUID (omit to use active draft)"`
+}
+
+func prepend(param *PrependCmd) string {
+	text := orStdin(param.Message)
+	uuid := orActive(param.UUID)
+	drafts.Prepend(uuid, text)
+	return drafts.Get(uuid).Content
 }
 
 type AppendCmd struct {
@@ -29,18 +58,50 @@ type AppendCmd struct {
 	UUID    string `arg:"-u" help:"UUID (omit to use active draft)"`
 }
 
+func append(param *AppendCmd) string {
+	text := orStdin(param.Message)
+	uuid := orActive(param.UUID)
+	drafts.Append(uuid, text)
+	return drafts.Get(uuid).Content
+}
+
 type ReplaceCmd struct {
 	Message string `arg:"positional" help:"text to append (omit to use stdin)"`
 	UUID    string `arg:"-u" help:"UUID (omit to use active draft)"`
+}
+
+func replace(param *ReplaceCmd) string {
+	text := orStdin(param.Message)
+	uuid := orActive(param.UUID)
+	drafts.Replace(uuid, text)
+	return drafts.Get(uuid).Content
 }
 
 type GetCmd struct {
 	UUID string `arg:"positional" help:"UUID (omit to use active draft)"`
 }
 
+func get(param *GetCmd) string {
+	uuid := orActive(param.UUID)
+	return drafts.Get(uuid).Content
+}
+
 type SelectCmd struct{}
 
-const linebreak = " ~ "
+func _select() {
+	ds := drafts.Query("", drafts.FilterInbox, drafts.QueryOptions{})
+	var b strings.Builder
+	for _, d := range ds {
+		fmt.Fprintf(&b, "%s %c %s\n", d.UUID, drafts.Separator, strings.Replace(d.Content, "\n", linebreak, -1))
+	}
+	uuid, err := fzfUUID(b.String())
+	if err != nil {
+		log.Fatal(err)
+	}
+	drafts.Select(uuid)
+}
+
+// ---- Main -------------------------------------------------------------------
 
 func main() {
 	var args struct {
@@ -69,63 +130,6 @@ func main() {
 	case args.Select != nil:
 		_select()
 	}
-}
-
-func new(param *NewCmd) string {
-	// Input
-	text := orStdin(param.Message)
-
-	// Params -> Options
-	opt := drafts.CreateOptions{
-		Tags:    param.Tag,
-		Flagged: param.Flagged,
-	}
-
-	if param.Archive {
-		opt.Folder = drafts.FolderArchive
-	}
-
-	uuid := drafts.Create(text, opt)
-	return uuid
-}
-
-func prepend(param *PrependCmd) string {
-	text := orStdin(param.Message)
-	uuid := orActive(param.UUID)
-	drafts.Prepend(uuid, text)
-	return drafts.Get(uuid).Content
-}
-
-func append(param *AppendCmd) string {
-	text := orStdin(param.Message)
-	uuid := orActive(param.UUID)
-	drafts.Append(uuid, text)
-	return drafts.Get(uuid).Content
-}
-
-func replace(param *ReplaceCmd) string {
-	text := orStdin(param.Message)
-	uuid := orActive(param.UUID)
-	drafts.Replace(uuid, text)
-	return drafts.Get(uuid).Content
-}
-
-func get(param *GetCmd) string {
-	uuid := orActive(param.UUID)
-	return drafts.Get(uuid).Content
-}
-
-func _select() {
-	ds := drafts.Query("", drafts.FilterInbox, drafts.QueryOptions{})
-	var b strings.Builder
-	for _, d := range ds {
-		fmt.Fprintf(&b, "%s %c %s\n", d.UUID, drafts.Separator, strings.Replace(d.Content, "\n", linebreak, -1))
-	}
-	uuid, err := fzfUUID(b.String())
-	if err != nil {
-		log.Fatal(err)
-	}
-	drafts.Select(uuid)
 }
 
 // --- Helpers -----------------------------------------------------------------
