@@ -2,9 +2,7 @@ package main
 
 import (
 	"fmt"
-	"io"
 	"log"
-	"os"
 	"strings"
 
 	arg "github.com/alexflint/go-arg"
@@ -130,24 +128,4 @@ func main() {
 	case args.Select != nil:
 		_select()
 	}
-}
-
-// --- Helpers -----------------------------------------------------------------
-
-func orStdin(text string) string {
-	if text != "" {
-		return text
-	}
-	stdin, err := io.ReadAll(os.Stdin)
-	if err != nil {
-		log.Fatal(err)
-	}
-	return string(stdin)
-}
-
-func orActive(uuid string) string {
-	if uuid != "" {
-		return uuid
-	}
-	return drafts.Active()
 }

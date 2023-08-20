@@ -2,12 +2,32 @@ package main
 
 import (
 	"fmt"
+	"io"
+	"log"
 	"os"
 	"os/exec"
 	"strings"
 
 	"github.com/ernstwi/drafts"
 )
+
+func orStdin(text string) string {
+	if text != "" {
+		return text
+	}
+	stdin, err := io.ReadAll(os.Stdin)
+	if err != nil {
+		log.Fatal(err)
+	}
+	return string(stdin)
+}
+
+func orActive(uuid string) string {
+	if uuid != "" {
+		return uuid
+	}
+	return drafts.Active()
+}
 
 // Run FZF on input, return UUID.
 func fzfUUID(input string) (string, error) {
