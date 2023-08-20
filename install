@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
 ln_safe() {
-    test -e "$2" && echo "ln_safe: $2: File exists"
     test -e "$2" || ln -s "$1" "$2"
 }
 
