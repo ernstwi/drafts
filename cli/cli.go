@@ -29,7 +29,10 @@ type AppendCmd struct {
 	UUID    string `arg:"-u" help:"UUID (omit to use active draft)"`
 }
 
-// TODO: Add `update`, then `edit`
+type ReplaceCmd struct {
+	Message string `arg:"positional" help:"text to append (omit to use stdin)"`
+	UUID    string `arg:"-u" help:"UUID (omit to use active draft)"`
+}
 
 type GetCmd struct {
 	UUID string `arg:"positional" help:"UUID (omit to use active draft)"`
@@ -44,6 +47,7 @@ func main() {
 		New     *NewCmd     `arg:"subcommand:new" help:"create new draft"`
 		Prepend *PrependCmd `arg:"subcommand:prepend" help:"prepend to draft"`
 		Append  *AppendCmd  `arg:"subcommand:append" help:"append to draft"`
+		Replace *ReplaceCmd `arg:"subcommand:replace" help:"append to draft"`
 		Get     *GetCmd     `arg:"subcommand:get" help:"get content of draft"`
 		Select  *SelectCmd  `arg:"subcommand:select" help:"select active draft using fzf"`
 	}
@@ -58,6 +62,8 @@ func main() {
 		fmt.Println(prepend(args.Prepend))
 	case args.Append != nil:
 		fmt.Println(append(args.Append))
+	case args.Replace != nil:
+		fmt.Println(replace(args.Replace))
 	case args.Get != nil:
 		fmt.Println(get(args.Get))
 	case args.Select != nil:
@@ -94,6 +100,13 @@ func append(param *AppendCmd) string {
 	text := orStdin(param.Message)
 	uuid := orActive(param.UUID)
 	drafts.Append(uuid, text)
+	return drafts.Get(uuid).Content
+}
+
+func replace(param *ReplaceCmd) string {
+	text := orStdin(param.Message)
+	uuid := orActive(param.UUID)
+	drafts.Replace(uuid, text)
 	return drafts.Get(uuid).Content
 }
 
