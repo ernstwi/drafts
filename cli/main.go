@@ -59,7 +59,7 @@ func main() {
 	case args.Append != nil:
 		fmt.Println(append(p, args.Append))
 	case args.Get != nil:
-		fmt.Println(get(p, args.Get.UUID))
+		fmt.Println(get(p, args.Get))
 	case args.Select != nil:
 		_select()
 	}
@@ -67,14 +67,7 @@ func main() {
 
 func new(p *arg.Parser, param *NewCmd) string {
 	// Input
-	text := param.Message
-	if text == "" {
-		stdin, err := io.ReadAll(os.Stdin)
-		if err != nil {
-			log.Fatal(err)
-		}
-		text = string(stdin)
-	}
+	text := orStdin(param.Message)
 
 	// Params -> Options
 	opt := drafts.CreateOptions{
@@ -91,43 +84,21 @@ func new(p *arg.Parser, param *NewCmd) string {
 }
 
 func prepend(p *arg.Parser, param *PrependCmd) string {
-	text := param.Message
-	if text == "" {
-		stdin, err := io.ReadAll(os.Stdin)
-		if err != nil {
-			log.Fatal(err)
-		}
-		text = string(stdin)
-	}
-	uuid := param.UUID
-	if uuid == "" {
-		uuid = drafts.Active()
-	}
+	text := orStdin(param.Message)
+	uuid := orActive(param.UUID)
 	drafts.Prepend(uuid, text)
 	return drafts.Get(uuid).Content
 }
 
 func append(p *arg.Parser, param *AppendCmd) string {
-	text := param.Message
-	if text == "" {
-		stdin, err := io.ReadAll(os.Stdin)
-		if err != nil {
-			log.Fatal(err)
-		}
-		text = string(stdin)
-	}
-	uuid := param.UUID
-	if uuid == "" {
-		uuid = drafts.Active()
-	}
+	text := orStdin(param.Message)
+	uuid := orActive(param.UUID)
 	drafts.Append(uuid, text)
 	return drafts.Get(uuid).Content
 }
 
-func get(p *arg.Parser, uuid string) string {
-	if uuid == "" {
-		return drafts.Get(drafts.Active()).Content
-	}
+func get(p *arg.Parser, param *GetCmd) string {
+	uuid := orActive(param.UUID)
 	return drafts.Get(uuid).Content
 }
 
@@ -142,4 +113,24 @@ func _select() {
 		log.Fatal(err)
 	}
 	drafts.Select(uuid)
+}
+
+// --- Helpers -----------------------------------------------------------------
+
+func orStdin(text string) string {
+	if text != "" {
+		return text
+	}
+	stdin, err := io.ReadAll(os.Stdin)
+	if err != nil {
+		log.Fatal(err)
+	}
+	return string(stdin)
+}
+
+func orActive(uuid string) string {
+	if uuid != "" {
+		return uuid
+	}
+	return drafts.Active()
 }
