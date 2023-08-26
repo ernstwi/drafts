@@ -11,14 +11,18 @@ import (
 	"github.com/ernstwi/drafts"
 )
 
+func fatal(err error) {
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
 func orStdin(text string) string {
 	if text != "" {
 		return text
 	}
 	stdin, err := io.ReadAll(os.Stdin)
-	if err != nil {
-		log.Fatal(err)
-	}
+	fatal(err)
 	return string(stdin)
 }
 
@@ -30,16 +34,13 @@ func orActive(uuid string) string {
 }
 
 // Run FZF on input, return UUID.
-func fzfUUID(input string) (string, error) {
-	line, err := fzf(input)
-	if err != nil {
-		return "", err
-	}
-	return strings.Split(line, fmt.Sprintf(" %c ", drafts.Separator))[0], nil
+func fzfUUID(input string) string {
+	line := fzf(input)
+	return strings.Split(line, fmt.Sprintf(" %c ", drafts.Separator))[0]
 }
 
 // Run FZF on input, return line.
-func fzf(input string) (string, error) {
+func fzf(input string) string {
 	var result strings.Builder
 	cmd := exec.Command("fzf", "--delimiter", "\\|", "--with-nth", "2")
 	cmd.Stdout = &result
@@ -47,31 +48,24 @@ func fzf(input string) (string, error) {
 	cmd.Stdin = strings.NewReader(input)
 
 	err := cmd.Start()
-	if err != nil {
-		return "", err
-	}
+	fatal(err)
 
 	err = cmd.Wait()
-	if err != nil {
-		return "", err
-	}
+	fatal(err)
 
-	return strings.TrimSpace(result.String()), nil
+	return strings.TrimSpace(result.String())
 }
 
-func editor(input string) (string, error) {
+func editor(input string) string {
 	f, err := os.CreateTemp("", "")
-	if err != nil {
-		log.Fatal(err)
-	}
+	fatal(err)
 	defer os.Remove(f.Name()) // clean up
 
-	if _, err := f.Write([]byte(input)); err != nil {
-		log.Fatal(err)
-	}
-	if err := f.Close(); err != nil {
-		log.Fatal(err)
-	}
+	_, err = f.Write([]byte(input))
+	fatal(err)
+
+	err = f.Close()
+	fatal(err)
 
 	editor := os.Getenv("EDITOR")
 	if editor == "" {
@@ -83,13 +77,11 @@ func editor(input string) (string, error) {
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 
-	if err := cmd.Run(); err != nil {
-		log.Fatal(err)
-	}
+	err = cmd.Run()
+	fatal(err)
 
 	data, err := os.ReadFile(f.Name())
-	if err != nil {
-		log.Fatal(err)
-	}
-	return string(data), nil
+	fatal(err)
+
+	return string(data)
 }

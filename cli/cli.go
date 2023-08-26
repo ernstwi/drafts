@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"strings"
 
 	arg "github.com/alexflint/go-arg"
@@ -81,10 +80,7 @@ type EditCmd struct {
 
 func edit(param *EditCmd) string {
 	uuid := orActive(param.UUID)
-	new, err := vim(drafts.Get(uuid).Content)
-	if err != nil {
-		log.Fatal(err)
-	}
+	new := editor(drafts.Get(uuid).Content)
 	drafts.Replace(uuid, new)
 	return new
 }
@@ -106,10 +102,7 @@ func _select() {
 	for _, d := range ds {
 		fmt.Fprintf(&b, "%s %c %s\n", d.UUID, drafts.Separator, strings.Replace(d.Content, "\n", linebreak, -1))
 	}
-	uuid, err := fzfUUID(b.String())
-	if err != nil {
-		log.Fatal(err)
-	}
+	uuid := fzfUUID(b.String())
 	drafts.Select(uuid)
 }
 
