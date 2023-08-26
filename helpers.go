@@ -12,24 +12,26 @@ import (
 	"strings"
 )
 
+func fatal(err error) {
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
 func open(action string, v url.Values) url.Values {
 	ch := make(chan string)
 	go server(ch)
 	sockAddr := <-ch // Wait for ready signal
 	v.Add("x-success", "drafts-callback-handler://"+sockAddr)
 	err := exec.Command("open", "-g", draftsURL(action, v)).Run()
-	if err != nil {
-		log.Fatal(err)
-	}
+	fatal(err)
 
 	return urlValues(<-ch)
 }
 
 func urlValues(urlstr string) url.Values {
 	u, err := url.Parse(urlstr)
-	if err != nil {
-		log.Fatal(err)
-	}
+	fatal(err)
 	return u.Query()
 }
 
@@ -41,24 +43,19 @@ func draftsURL(action string, v url.Values) string {
 func server(ch chan string) {
 	// Create a temp file to use as socket address
 	f, err := os.CreateTemp("", "*.sock")
-	if err != nil {
-		log.Fatal(err)
-	}
+	fatal(err)
 	sockAddr := f.Name()
 
 	// We don't actually need the file, just the filename
-	if err := f.Close(); err != nil {
-		log.Fatal(err)
-	}
+	err = f.Close()
+	fatal(err)
 	os.Remove(f.Name())
 
 	// To delete the socket after communication is done
 	defer os.Remove(f.Name())
 
 	l, err := net.Listen("unix", sockAddr)
-	if err != nil {
-		log.Fatal("listen error:", err)
-	}
+	fatal(err)
 	defer l.Close()
 
 	// Send socket address to open(), which sends it to the callback handler via
@@ -68,22 +65,16 @@ func server(ch chan string) {
 	ch <- sockAddr
 
 	c, err := l.Accept()
-	if err != nil {
-		log.Fatal("accept error:", err)
-	}
+	fatal(err)
 
 	msg, err := io.ReadAll(c)
-	if err != nil {
-		log.Fatal(err)
-	}
+	fatal(err)
 
 	ch <- string(msg)
 }
 
 func mustJSON(a any) string {
 	js, err := json.Marshal(a)
-	if err != nil {
-		log.Fatal(err)
-	}
+	fatal(err)
 	return string(js)
 }
