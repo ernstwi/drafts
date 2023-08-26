@@ -23,6 +23,12 @@ import (
 
 var urlListener chan string = make(chan string)
 
+func fatal(err error) {
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
 //export HandleURL
 func HandleURL(u *C.char) {
 	urlListener <- C.GoString(u)
@@ -38,21 +44,15 @@ func main() {
 	urlStr = strings.ReplaceAll(urlStr, "+", "%2B")
 
 	url, err := url.Parse(urlStr)
-	if err != nil {
-		log.Fatal(err)
-	}
+	fatal(err)
 	sockAddr := url.Path
 
 	c, err := net.Dial("unix", sockAddr)
-	if err != nil {
-		log.Fatal(err)
-	}
+	fatal(err)
 	defer c.Close()
 
 	_, err = c.Write([]byte(urlStr))
-	if err != nil {
-		log.Fatal("write error:", err)
-	}
+	fatal(err)
 
 	termApp := "Terminal"
 	{
@@ -63,9 +63,7 @@ func main() {
 	}
 
 	err = exec.Command("open", "-a", termApp).Run()
-	if err != nil {
-		log.Fatal(err)
-	}
+	fatal(err)
 }
 
 type Config struct {
