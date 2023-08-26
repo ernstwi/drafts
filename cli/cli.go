@@ -75,6 +75,20 @@ func replace(param *ReplaceCmd) string {
 	return drafts.Get(uuid).Content
 }
 
+type EditCmd struct {
+	UUID string `arg:"positional" help:"UUID (omit to use active draft)"`
+}
+
+func edit(param *EditCmd) string {
+	uuid := orActive(param.UUID)
+	new, err := vim(drafts.Get(uuid).Content)
+	if err != nil {
+		log.Fatal(err)
+	}
+	drafts.Replace(uuid, new)
+	return new
+}
+
 type GetCmd struct {
 	UUID string `arg:"positional" help:"UUID (omit to use active draft)"`
 }
@@ -107,6 +121,7 @@ func main() {
 		Prepend *PrependCmd `arg:"subcommand:prepend" help:"prepend to draft"`
 		Append  *AppendCmd  `arg:"subcommand:append" help:"append to draft"`
 		Replace *ReplaceCmd `arg:"subcommand:replace" help:"append to draft"`
+		Edit    *EditCmd    `arg:"subcommand:edit" help:"edit draft in vim"`
 		Get     *GetCmd     `arg:"subcommand:get" help:"get content of draft"`
 		Select  *SelectCmd  `arg:"subcommand:select" help:"select active draft using fzf"`
 	}
@@ -123,6 +138,8 @@ func main() {
 		fmt.Println(append(args.Append))
 	case args.Replace != nil:
 		fmt.Println(replace(args.Replace))
+	case args.Edit != nil:
+		fmt.Println(edit(args.Edit))
 	case args.Get != nil:
 		fmt.Println(get(args.Get))
 	case args.Select != nil:

@@ -58,3 +58,38 @@ func fzf(input string) (string, error) {
 
 	return strings.TrimSpace(result.String()), nil
 }
+
+func editor(input string) (string, error) {
+	f, err := os.CreateTemp("", "")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer os.Remove(f.Name()) // clean up
+
+	if _, err := f.Write([]byte(input)); err != nil {
+		log.Fatal(err)
+	}
+	if err := f.Close(); err != nil {
+		log.Fatal(err)
+	}
+
+	editor := os.Getenv("EDITOR")
+	if editor == "" {
+		editor = "vim"
+	}
+
+	cmd := exec.Command(editor, f.Name())
+	cmd.Stdin = os.Stdin
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+
+	if err := cmd.Run(); err != nil {
+		log.Fatal(err)
+	}
+
+	data, err := os.ReadFile(f.Name())
+	if err != nil {
+		log.Fatal(err)
+	}
+	return string(data), nil
+}
