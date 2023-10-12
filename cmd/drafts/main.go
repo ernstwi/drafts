@@ -6,7 +6,7 @@ import (
 
 	arg "github.com/alexflint/go-arg"
 
-	"github.com/ernstwi/drafts"
+	"github.com/ernstwi/drafts/pkg/drafts"
 )
 
 const linebreak = " ~ "

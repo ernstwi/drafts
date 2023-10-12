@@ -8,7 +8,7 @@ import (
 	"os/exec"
 	"strings"
 
-	"github.com/ernstwi/drafts"
+	"github.com/ernstwi/drafts/pkg/drafts"
 )
 
 func fatal(err error) {
