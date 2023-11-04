@@ -14,10 +14,25 @@ before:
     - go generate ./...
 
 builds:
-  - env:
-      - CGO_ENABLED=0
+  - id: "drafts"
+    dir: "./cmd/drafts"
+    binary: "drafts"
     goos:
-      - darwin
+      - "darwin"
+    goarch:
+      - "amd64"
+      - "arm64"
+
+  - id: "drafts-callback-handler"
+    env:
+      - CGO_ENABLED=1
+    dir: "./cmd/drafts-callback-handler"
+    binary: "drafts-callback-handler"
+    goos:
+      - "darwin"
+    goarch:
+      - "amd64"
+      - "arm64"
 
 archives:
   - format: tar.gz
