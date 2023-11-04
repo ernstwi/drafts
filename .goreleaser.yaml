@@ -35,10 +35,21 @@ builds:
       - "arm64"
 
 archives:
-  - format: tar.gz
-    # this name template makes the OS and Arch compatible with the results of `uname`.
+  - id: drafts
+    builds:
+    - drafts
     name_template: >-
-      {{ .ProjectName }}_
+      drafts_
+      {{- title .Os }}_
+      {{- if eq .Arch "amd64" }}x86_64
+      {{- else if eq .Arch "386" }}i386
+      {{- else }}{{ .Arch }}{{ end }}
+      {{- if .Arm }}v{{ .Arm }}{{ end }}
+  - id: "drafts-callback-handler"
+    builds:
+    - "drafts-callback-handler"
+    name_template: >-
+      drafts-callback-handler_
       {{- title .Os }}_
       {{- if eq .Arch "amd64" }}x86_64
       {{- else if eq .Arch "386" }}i386
@@ -51,3 +62,12 @@ changelog:
     exclude:
       - "^docs:"
       - "^test:"
+
+brews:
+  - ids:
+    - "drafts"
+    homepage: "https://example.com/"
+    license: "MIT"
+    repository:
+      owner: your_github_username
+      name: your_homebrew_tap_repository
