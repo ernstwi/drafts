@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/ernstwi/drafts/assert"
+	"github.com/ernstwi/drafts/internal/assert"
 )
 
 func TestCreateDefault(t *testing.T) {
