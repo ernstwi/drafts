@@ -58,8 +58,8 @@ archives:
       {{- else }}{{ .Arch }}{{ end }}
       {{- if .Arm }}v{{ .Arm }}{{ end }}
     files:
-      - src: build/drafts-callback-handler/DraftsCallbackHandler.zip
-        dst: DraftsCallbackHandler.zip
+      - src: "build/drafts-callback-handler/Drafts Callback Handler.zip"
+        dst: "Drafts Callback Handler.zip"
 
 changelog:
   sort: asc
