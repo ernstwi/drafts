@@ -41,24 +41,18 @@ archives:
     builds:
       - drafts
     name_template: >-
-      drafts_
-      {{- title .Os }}_
-      {{- if eq .Arch "amd64" }}x86_64
-      {{- else if eq .Arch "386" }}i386
-      {{- else }}{{ .Arch }}{{ end }}
-      {{- if .Arm }}v{{ .Arm }}{{ end }}
+      drafts-
+      {{- if eq .Arch "amd64" }}intel
+      {{- else }}arm{{ end }}
   - id: "drafts-callback-handler"
     builds:
       - "drafts-callback-handler"
     name_template: >-
-      drafts-callback-handler_
-      {{- title .Os }}_
-      {{- if eq .Arch "amd64" }}x86_64
-      {{- else if eq .Arch "386" }}i386
-      {{- else }}{{ .Arch }}{{ end }}
-      {{- if .Arm }}v{{ .Arm }}{{ end }}
+      drafts-callback-handler-
+      {{- if eq .Arch "amd64" }}intel
+      {{- else }}arm{{ end }}
     files:
-      - src: "build/drafts-callback-handler/Drafts Callback Handler.zip"
+      - src: "drafts-callback-handler.zip"
         dst: "Drafts Callback Handler.zip"
 
 changelog:
