@@ -9,4 +9,3 @@ cp "build/drafts-callback-handler/Info.plist" "Drafts Callback Handler.app/Conte
 
 # Zip it
 zip -r "drafts-callback-handler.zip" "Drafts Callback Handler.app/"
-rm -r "Drafts Callback Handler.app"
