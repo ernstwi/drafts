@@ -48,6 +48,8 @@ archives:
       drafts-
       {{- if eq .Arch "amd64" }}intel
       {{- else }}arm{{ end }}
+    files:
+      - none*
   - id: "drafts-callback-handler_arm"
     meta: true # Don't include any build files
     name_template: >-
