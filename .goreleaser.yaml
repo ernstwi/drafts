@@ -53,7 +53,7 @@ archives:
     name_template: >-
       drafts-callback-handler-app_darwin_arm64
     files:
-      - "drafts-callback-handler-app_darwin_arm64.zip"
+      - "Drafts Callback Handler.app"
 
 changelog:
   sort: asc
