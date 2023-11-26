@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Setup
-mkdir -p "Drafts Callback Handler.app/Contents/MacOS"
-cp "build/drafts-callback-handler/Info.plist" "Drafts Callback Handler.app/Contents/"
+mkdir -p "Drafts CLI Helper.app/Contents/MacOS"
+cp "build/drafts-callback-handler/Info.plist" "Drafts CLI Helper.app/Contents/"
 
-cp $BIN "Drafts Callback Handler.app/Contents/MacOS/"
+cp $BIN "Drafts CLI Helper.app/Contents/MacOS/"

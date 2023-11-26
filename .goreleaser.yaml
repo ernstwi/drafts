@@ -42,4 +42,4 @@ archives:
     name_template: "drafts-callback-handler"
     meta: true # Don't include any build files
     files:
-      - "Drafts Callback Handler.app"
+      - "Drafts CLI Helper.app"
