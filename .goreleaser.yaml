@@ -51,10 +51,3 @@ archives:
       drafts-callback-handler-app_darwin_arm64
     files:
       - "Drafts Callback Handler.app"
-
-changelog:
-  sort: asc
-  filters:
-    exclude:
-      - "^docs:"
-      - "^test:"
