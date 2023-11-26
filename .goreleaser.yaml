@@ -12,13 +12,12 @@ builds:
     goos:
       - "darwin"
 
+universal_binaries:
+  - replace: true
+
 archives:
   - id: drafts
     builds:
       - drafts
-    name_template: >-
-      drafts-
-      {{- if eq .Arch "amd64" }}intel
-      {{- else }}arm{{ end }}
     files:
       - none*
