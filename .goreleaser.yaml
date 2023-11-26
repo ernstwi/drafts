@@ -38,8 +38,8 @@ archives:
       - drafts
     files:
       - none*
-  - id: "drafts-callback-handler"
-    name_template: "drafts-callback-handler"
+  - id: "drafts-cli-helper"
+    name_template: "drafts-cli-helper"
     meta: true # Don't include any build files
     files:
       - "Drafts CLI Helper.app"
