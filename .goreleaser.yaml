@@ -63,15 +63,3 @@ changelog:
     exclude:
       - "^docs:"
       - "^test:"
-
-brews:
-  # Use only drafts archive
-  - ids:
-      - "drafts"
-    homepage: "https://example.com/"
-    license: "MIT"
-    repository:
-      owner: your_github_username
-      name: your_homebrew_tap_repository
-    dependencies:
-      - name: fzf
