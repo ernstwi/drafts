@@ -11,9 +11,6 @@ builds:
     binary: "drafts"
     goos:
       - "darwin"
-    goarch:
-      - "amd64"
-      - "arm64"
 
 archives:
   - id: drafts
