@@ -6,15 +6,15 @@
     <key>CFBundleDevelopmentRegion</key>
     <string>en</string>
     <key>CFBundleDisplayName</key>
-    <string>Drafts Callback Handler</string>
+    <string>Drafts CLI Helper</string>
     <key>CFBundleExecutable</key>
-    <string>Drafts Callback Handler</string>
+    <string>drafts-callback-handler</string>
     <key>CFBundleIdentifier</key>
     <string>com.ernstwi.drafts-callback-handler</string>
     <key>CFBundleInfoDictionaryVersion</key>
     <string>6.0</string>
     <key>CFBundleName</key>
-    <string>Drafts Callback Handler</string>
+    <string>Drafts CLI Helper</string>
     <key>CFBundlePackageType</key>
     <string>APPL</string>
     <key>CFBundleShortVersionString</key>
