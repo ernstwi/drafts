@@ -10,14 +10,9 @@ package main
 import "C"
 
 import (
-	"encoding/json"
-	"fmt"
 	"log"
 	"net"
 	"net/url"
-	"os"
-	"os/exec"
-	"path/filepath"
 	"strings"
 )
 
@@ -53,32 +48,4 @@ func main() {
 
 	_, err = c.Write([]byte(urlStr))
 	fatal(err)
-
-	termApp := "Terminal"
-	{
-		conf := config()
-		if conf.Terminal != "" {
-			termApp = conf.Terminal
-		}
-	}
-
-	err = exec.Command("open", "-a", termApp).Run()
-	fatal(err)
-}
-
-type Config struct {
-	Terminal string `json:"terminal"`
-}
-
-func config() Config {
-	home, _ := os.UserHomeDir()
-	file, _ := os.Open(filepath.Join(home, ".config", "drafts-cli", "config.json"))
-	defer file.Close()
-	decoder := json.NewDecoder(file)
-	c := Config{}
-	err := decoder.Decode(&c)
-	if err != nil {
-		fmt.Println("error:", err)
-	}
-	return c
 }
