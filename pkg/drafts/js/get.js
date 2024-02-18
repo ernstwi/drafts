@@ -9,5 +9,5 @@ if (d) {
     isTrashed: d.isTrashed,
   };
   context.addSuccessParameter("result", JSON.stringify(res));
-  context.addSuccessParameter("app", "kitty.app");
+  context.addSuccessParameter("app", app);
 }

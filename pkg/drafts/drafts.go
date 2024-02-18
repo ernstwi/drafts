@@ -124,9 +124,11 @@ func JS(program string, params ...any) string {
 	js := mustJSON(struct {
 		Program string `json:"program"`
 		Input   []any  `json:"input"`
+		App     string `json:"app"`
 	}{
 		program,
 		params,
+		"kitty.app",
 	})
 	v := RunAction("Drafts CLI Helper", string(js))
 	if v.Has("result") {
