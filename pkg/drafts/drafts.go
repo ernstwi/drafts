@@ -3,6 +3,7 @@ package drafts
 import (
 	"encoding/json"
 	"net/url"
+	"os/exec"
 )
 
 // ---- Writing drafts ---------------------------------------------------------
@@ -121,6 +122,9 @@ func RunAction(action, text string) url.Values {
 // Run JavaScript program in Drafts. Params are available as an array `input`.
 // Returns any JSON added as `result` using context.addSuccessParameter.
 func JS(program string, params ...any) string {
+	app, err := exec.Command("osascript", "-e", "set res to name of (info for ((path to frontmost application)))").Output()
+	fatal(err)
+
 	js := mustJSON(struct {
 		Program string `json:"program"`
 		Input   []any  `json:"input"`
@@ -128,7 +132,7 @@ func JS(program string, params ...any) string {
 	}{
 		program,
 		params,
-		"kitty.app",
+		string(app),
 	})
 	v := RunAction("Drafts CLI Helper", string(js))
 	if v.Has("result") {
