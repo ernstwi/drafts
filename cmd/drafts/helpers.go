@@ -83,5 +83,8 @@ func editor(input string) string {
 	data, err := os.ReadFile(f.Name())
 	fatal(err)
 
-	return string(data)
+	// Trim trailing newline
+	res := strings.TrimSuffix(string(data), "\n")
+
+	return res
 }
