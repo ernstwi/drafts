@@ -46,7 +46,8 @@ func callbackURL(sockAddr string) string {
 }
 
 func draftsURL(action string, v url.Values) string {
-	// TODO: Why is this using strings.ReplaceAll?
+	// Replace "+" with "%20" in the encoded string, as Drafts does not like "+" in
+	// query parameters
 	return fmt.Sprintf("drafts://x-callback-url/%s?%s", action, strings.ReplaceAll(v.Encode(), "+", "%20"))
 }
 
