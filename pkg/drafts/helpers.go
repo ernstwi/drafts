@@ -22,7 +22,8 @@ func open(action string, v url.Values) url.Values {
 	ch := make(chan string)
 	go server(ch)
 	sockAddr := <-ch // Wait for ready signal
-	v.Add("x-success", "drafts-callback-handler://"+sockAddr)
+
+	v.Add("x-success", callbackURL(sockAddr))
 	err := exec.Command("open", "-g", draftsURL(action, v)).Run()
 	fatal(err)
 
@@ -35,7 +36,18 @@ func urlValues(urlstr string) url.Values {
 	return u.Query()
 }
 
+func callbackURL(sockAddr string) string {
+	app, err := exec.Command("osascript", "-e", "set res to name of (info for ((path to frontmost application)))").Output()
+	fatal(err)
+
+	v := url.Values{}
+	v.Add("app", string(app))
+	return fmt.Sprintf("drafts-callback-handler://%s?%s", sockAddr, v.Encode())
+}
+
 func draftsURL(action string, v url.Values) string {
+	// Replace "+" with "%20" in the encoded string, as Drafts does not like "+" in
+	// query parameters
 	return fmt.Sprintf("drafts://x-callback-url/%s?%s", action, strings.ReplaceAll(v.Encode(), "+", "%20"))
 }
 

@@ -10,9 +10,11 @@ package main
 import "C"
 
 import (
+	"errors"
 	"log"
 	"net"
 	"net/url"
+	"os/exec"
 	"strings"
 )
 
@@ -20,6 +22,7 @@ var urlListener chan string = make(chan string)
 
 func fatal(err error) {
 	if err != nil {
+		// TODO: Pass error message to drafts-cli output
 		log.Fatal(err)
 	}
 }
@@ -47,5 +50,12 @@ func main() {
 	defer c.Close()
 
 	_, err = c.Write([]byte(urlStr))
+	fatal(err)
+
+	v := url.Query()
+	if !v.Has("app") {
+		fatal(errors.New("missing `app` URL parameter"))
+	}
+	err = exec.Command("open", "-a", v.Get("app")).Run()
 	fatal(err)
 }
