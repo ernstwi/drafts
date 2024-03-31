@@ -100,7 +100,7 @@ func _select() {
 	ds := drafts.Query("", drafts.FilterInbox, drafts.QueryOptions{})
 	var b strings.Builder
 	for _, d := range ds {
-		fmt.Fprintf(&b, "%s %c %s\n", d.UUID, drafts.Separator, strings.Replace(d.Content, "\n", linebreak, -1))
+		fmt.Fprintf(&b, "%s %c %s\n", d.UUID, drafts.Separator, strings.ReplaceAll(d.Content, "\n", linebreak))
 	}
 	uuid := fzfUUID(b.String())
 	drafts.Select(uuid)
