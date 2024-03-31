@@ -114,7 +114,7 @@ func main() {
 		Prepend *PrependCmd `arg:"subcommand:prepend" help:"prepend to draft"`
 		Append  *AppendCmd  `arg:"subcommand:append" help:"append to draft"`
 		Replace *ReplaceCmd `arg:"subcommand:replace" help:"append to draft"`
-		Edit    *EditCmd    `arg:"subcommand:edit" help:"edit draft in vim"`
+		Edit    *EditCmd    `arg:"subcommand:edit" help:"edit draft in $EDITOR"`
 		Get     *GetCmd     `arg:"subcommand:get" help:"get content of draft"`
 		Select  *SelectCmd  `arg:"subcommand:select" help:"select active draft using fzf"`
 	}
