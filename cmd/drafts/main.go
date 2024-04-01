@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"regexp"
 	"strings"
 
 	arg "github.com/alexflint/go-arg"
@@ -9,7 +10,7 @@ import (
 	"github.com/ernstwi/drafts/pkg/drafts"
 )
 
-const linebreak = " ~ "
+const linebreak = " ¶ "
 
 // ---- Commands ---------------------------------------------------------------
 
@@ -99,8 +100,9 @@ type SelectCmd struct{}
 func _select() {
 	ds := drafts.Query("", drafts.FilterInbox, drafts.QueryOptions{})
 	var b strings.Builder
+	linebreakRegex := regexp.MustCompile(`\n+`)
 	for _, d := range ds {
-		fmt.Fprintf(&b, "%s %c %s\n", d.UUID, drafts.Separator, strings.ReplaceAll(d.Content, "\n", linebreak))
+		fmt.Fprintf(&b, "%s %c %s\n", d.UUID, drafts.Separator, linebreakRegex.ReplaceAllString(d.Content, linebreak))
 	}
 	uuid := fzfUUID(b.String())
 	drafts.Select(uuid)
