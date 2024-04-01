@@ -23,7 +23,7 @@ func orStdin(text string) string {
 	}
 	stdin, err := io.ReadAll(os.Stdin)
 	fatal(err)
-	return string(stdin)
+	return strings.TrimSuffix(string(stdin), "\n")
 }
 
 func orActive(uuid string) string {
@@ -83,8 +83,5 @@ func editor(input string) string {
 	data, err := os.ReadFile(f.Name())
 	fatal(err)
 
-	// Trim trailing newline
-	res := strings.TrimSuffix(string(data), "\n")
-
-	return res
+	return strings.TrimSuffix(string(data), "\n")
 }
