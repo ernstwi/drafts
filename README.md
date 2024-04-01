@@ -6,19 +6,19 @@ https://github.com/ernstwi/drafts/assets/17042548/3fe84265-f30e-480e-9e8a-25feec
 
 ## Install
 
-1. Install the required [helper action](https://directory.getdrafts.com/a/2Qx) from the Drafts Directory
-
-2. Install the CLI:
+1. Install the CLI:
 
 ```
 brew install ernstwi/tap/drafts
 ```
 
-3. Install the required helper application (see ["Implementation notes"](#implementation-notes) below):
+2. Install the required helper application (see ["Implementation notes"](#implementation-notes) below):
 
 ```
 brew install --cask --no-quarantine ernstwi/tap/drafts-helper
 ```
+
+3. Install the required [helper action](https://directory.getdrafts.com/a/2Qx) from the Drafts Directory
 
 ## Usage
 
