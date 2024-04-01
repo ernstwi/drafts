@@ -97,7 +97,7 @@ func get(param *GetCmd) string {
 
 type SelectCmd struct{}
 
-func _select() {
+func _select() string {
 	ds := drafts.Query("", drafts.FilterInbox, drafts.QueryOptions{})
 	var b strings.Builder
 	linebreakRegex := regexp.MustCompile(`\n+`)
@@ -106,6 +106,7 @@ func _select() {
 	}
 	uuid := fzfUUID(b.String())
 	drafts.Select(uuid)
+	return drafts.Get(uuid).Content
 }
 
 // ---- Main -------------------------------------------------------------------
@@ -138,6 +139,6 @@ func main() {
 	case args.Get != nil:
 		fmt.Println(get(args.Get))
 	case args.Select != nil:
-		_select()
+		fmt.Println(_select())
 	}
 }
