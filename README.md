@@ -6,7 +6,7 @@ https://github.com/ernstwi/drafts/assets/17042548/3fe84265-f30e-480e-9e8a-25feec
 
 ## Install
 
-1. Install [this action](TODO:LINK) from the Drafts Directory
+1. Install the required [helper action](https://directory.getdrafts.com/a/2Qx) from the Drafts Directory
 
 2. Install the CLI:
 
